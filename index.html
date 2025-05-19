@@ -1,0 +1,2035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Commercial Real Estate Stress Test Pipeline</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+KR:wght@100..900&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Base styles */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family:   'Tinos';
+            color: #333;
+            line-height: 1.6;
+            background-color: #f8f8f8;
+        }
+        
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-family:  'Tinos';
+            color: #222;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            border-bottom: 3px solid #333;
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+        
+        h2 {
+            font-size: 2rem;
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+        }
+        
+        p {
+            margin-bottom: 1rem;
+        }
+        
+        /* Layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-container {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;    /* 이 줄이 세로 중앙 정렬을 책임집니다 */
+          padding: .75rem 2rem;   /* 높이를 조금 더 확보해도 좋습니다 */
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #222;
+        }
+        
+        /* NAVBAR – slimmed */
+        header{position:fixed;top:0;width:100%;background:#fff;box-shadow:0 1px 6px rgba(0,0,0,.08);z-index:1000}
+        .header-container{display:flex;justify-content:space-between;align-items:center;padding:.55rem 1.2rem;max-width:1200px;margin:0 auto}
+        .logo{font-size:1.35rem;font-weight:700;white-space:nowrap}
+        .nav-links{display:flex;list-style:none;font-size:.95rem}
+        .nav-links li+li{margin-left:1.1rem}
+        .nav-links a{font-weight:500;color:#333}
+        .nav-links a:hover{color:#000}
+        .mobile-menu-btn{display:none;background:none;border:none;font-size:1.35rem;color:#333}
+        @media(max-width:768px){
+          .nav-links{display:none;position:absolute;top:60px;left:0;right:0;background:#fff;flex-direction:column;padding:18px;box-shadow:0 4px 8px rgba(0,0,0,.1)}
+          .nav-links.show{display:flex}
+          .nav-links li{margin:9px 0}
+          .mobile-menu-btn{display:block}
+        }
+        /* 3. 링크 사이 간격 조정 */
+        .nav-links li + li {
+          margin-left: 1.5rem;    /* 필요에 따라 값 조절 가능 */
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #333;
+        }
+        
+        /* Main content */
+        main {
+            padding-top: 80px;
+            padding-bottom: 60px;
+        }
+        
+        section {
+            padding: 60px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        section:last-child {
+            border-bottom: none;
+        }
+        
+
+        /* === Intro Slide === */
+        .slide-intro {
+        padding: 60px 20px;
+        background-color: #fff;
+        border-bottom: 1px solid #e0e0e0;
+        }
+
+        .slide-intro .slide-title {
+        font-family: 'Tinos', serif;
+        font-weight: 600;
+        font-size: 2.5rem;
+        color: #222;
+        margin-bottom: 0.5rem;
+        border-bottom: 3px solid #333;
+        display: inline-block;
+        padding-bottom: 0.5rem;
+        }
+
+        .slide-intro .byline {
+        font-family: 'Tinos', sans-serif;
+        font-weight: 400;
+        font-size: 1rem;
+        color: #555;
+        margin-bottom: 2rem;
+        }
+
+        .slide-intro .note {
+        font-family: 'Tinos', sans-serif;
+        font-weight: 400;
+        font-size: 0.95rem;
+        color: #333;
+        line-height: 1.6;
+        }
+
+        
+        /* Cards */
+        .card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            padding: 25px;
+            margin-bottom: 30px;
+            transition: transform 0.2s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            background-color: #222;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px 8px 0 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: -25px -25px 20px -25px;
+        }
+        
+        /* Grid layouts */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+        
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+        
+        /* Feature items */
+        .feature-impact {
+            display: flex;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+        
+        .feature-name {
+            width: 120px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .impact-bar-container {
+            flex-grow: 1;
+            background-color: #e0e0e0;
+            height: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .impact-bar {
+            height: 100%;
+            border-radius: 10px;
+        }
+        
+        .impact-value {
+            width: 50px;
+            text-align: right;
+            font-weight: 600;
+            padding-left: 10px;
+        }
+        
+        .positive {
+            background-color: #555;
+        }
+        
+        .negative {
+            background-color: #888;
+        }
+        
+        /* Metrics */
+        .metric-box {
+            text-align: center;
+            padding: 25px 15px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }
+        .roc-container{            /* 캔버스를 감싸는 래퍼 */
+        width:100%;
+        height:400px;            /* 원하는 높이로 조절 (예: 400 px)  */
+        position:relative;
+        }
+
+        #rocChart{                 /* 캔버스가 래퍼를 꽉 채우도록 */
+        width:100%!important;
+        height:100%!important;
+        }
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #222;
+            margin-bottom: 5px;
+        }
+        
+        .metric-label {
+            font-size: 1rem;
+            color: #555;
+        }
+        
+        /* Icons */
+        .icon-container {
+            background-color: #f2f2f2;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .icon-container i {
+            font-size: 24px;
+            color: #222;
+        }
+        
+        /* Timeline */
+        .timeline {
+            position: relative;
+            margin: 40px 0;
+            padding-left: 30px;
+        }
+        
+        .timeline::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 7px;
+            width: 2px;
+            background-color: #333;
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+        }
+        
+        .timeline-item::before {
+            content: "";
+            position: absolute;
+            left: -30px;
+            top: 5px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: #333;
+        }
+        
+        /* Callout boxes */
+        .callout {
+            background-color: #f2f2f2;
+            border-left: 5px solid #333;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .callout-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        /* Code blocks */
+        .code-block {
+            font-family: 'Courier New', monospace;
+            background-color: #f2f2f2;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+            font-size: 14px;
+            overflow-x: auto;
+        }
+        
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+            font-weight: 600;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #222;
+            color: black;
+            padding: 30px 0;
+        }
+        
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .footer-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .footer-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-left: 20px;
+        }
+        
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .grid-2, .grid-3, .grid-4 {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background-color: #fff;
+                flex-direction: column;
+                padding: 20px;
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            }
+            
+            .nav-links.show {
+                display: flex;
+            }
+            
+            .nav-links li {
+                margin: 10px 0;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+            /* Icon spacing */
+        .icon-left {
+            font-size: 0.9rem; 
+            width: 1.1rem; 
+            text-align: center; 
+            color: #111827; 
+            margin-right: .5rem; /* Extra breathing room */
+        }
+
+        /* Agenda bullets */
+        .agenda-list { padding-left: 1.25rem; }
+        .agenda-list li { margin: 0.35rem 0; }
+
+        /* reuse your global palette or tweak here */
+        :root {
+            --roc-color: #0063a3;   /* blue */
+            --op-color:  #c54343;   /* red  */
+        }
+
+        /* legend layout mirrors other small-print in your deck */
+        .chart-legend {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .legend-swatch {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 4px;
+        }
+
+        .legend-swatch.roc { background: var(--roc-color); }
+        .legend-swatch.op  { background: var(--op-color); }
+                /* SVG가 카드 안에서 꽉 차도록 */
+        .roc-svg {
+        width: 100%;
+        max-width: 400px;   /* 원하면 조정 */
+        height: auto;
+        }
+        .callout {
+        margin: 2rem 0;
+        padding: 1.5rem;
+        background: #f5f5f5;
+        border-left: 4px solid #000;
+        font-style: italic;
+        }
+        /* Layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .impact-bar-container {
+            flex-grow: 1;
+            height: 30px;
+            background-color: #f5f5f5;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+        /* 기존 카드·레이아웃 스타일 그대로 두고,
+        legend 색상·간격만 조절 */
+        .chart-legend { display: flex; justify-content: space-around;
+                        margin-top: .5rem; font-size: .9rem; }
+        .legend-item  { display: flex; align-items: center; }
+        .legend-swatch{ width:12px;height:12px;border-radius:50%;margin-right:4px; }
+        .legend-swatch.roc{ background:#0063a3; }
+        .legend-swatch.op { background:#c54343; }
+        /* ROC 카드가 다른 카드와 동일한 padding 을 갖도록 */
+        .roc-card .roc-container {
+        width: 100%;
+        height: 320px;      /* 다른 카드 비주얼과 비슷한 세로 비 */
+        margin: 0 -10px;    /* chart 가 카드 모서리에 좀 더 가깝게 */
+        position: relative;
+        }
+        /* Chart.js 라벨용 폰트를 Tinos 로 맞추기 */
+        canvas#rocChart {
+        font-family: 'Tinos', serif !important;
+        }
+
+        /* 대시 선이 너무 촘촘하면 끊겨 보일 수 있으니 간격 살짝 늘림 */
+        :root {
+        --roc-color: #004d7a;   /* 살짝 진한 블루 → 대형 스크린에서 더 또렷 */
+        --op-color:  #b13636;   /* 동일 톤 다운 */
+        }
+        .roc-card .code-block { margin: 0; }
+        .closing-note {
+        margin-top: 2rem;
+        font-style: italic;      /* optional—remove if you prefer normal text */
+        opacity: 0.9;            /* optional—gives a subtle, lighter feel */
+             }
+
+        /* brand card on the right */
+        .brand-card {
+            background: #1a1a1a;
+            color: #fff;
+            padding: 1rem 1.5rem;
+            min-width: 260px;
+            text-align: center;
+        }
+
+        .brand-name {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .brand-role span {
+            font-weight: 300;
+            font-size: 0.9em;
+        }
+        /* tidy footer strip */
+        .footer {
+            background: #fdfdfd;          /* light background; change to #1a1a1a + color:#fff if you prefer dark */
+            border-top: 1px solid #e0e0e0;
+            padding: 1.2rem 0;
+            font-size: 1rem;
+        }
+
+        .footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.8rem 1.5rem;           /* row / column gap */
+        }
+
+        /* brand text */
+        .brand {
+            font-weight: 600;
+            flex: 1 1 100%;               /* full-width on mobile */
+            text-align: center;
+        }
+
+        /* contact links */
+        .contact-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem 1.5rem;
+            justify-content: center;
+            flex: 1 1 100%;               /* full-width on mobile */
+        }
+
+        .contact-links a {
+            text-decoration: none;
+            color: inherit;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .contact-links i {
+            margin-right: 0.35rem;
+            font-size: 1em;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Tinos';
+            color: #333;
+            line-height: 1.6;
+            background-color: #f8f8f8;
+        }
+        
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Tinos';
+            color: #222;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            border-bottom: 3px solid #333;
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+        
+        h2 {
+            font-size: 2rem;
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+        }
+        
+        p {
+            margin-bottom: 1rem;
+        }
+        
+        /* Layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #222;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 2rem;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #000;
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #333;
+        }
+        
+        /* Main content */
+        main {
+            padding-top: 80px;
+            padding-bottom: 60px;
+        }
+        
+        section {
+            padding: 60px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        section:last-child {
+            border-bottom: none;
+        }
+        
+        /* Cards */
+        .card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            padding: 25px;
+            margin-bottom: 30px;
+            transition: transform 0.2s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            background-color: #222;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px 8px 0 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: -25px -25px 20px -25px;
+        }
+        
+        /* Grid layouts */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+
+        /* NEW STYLES FOR ML SECTIONS */
+
+        .section-title-black {
+            background-color: #000;
+            color: #fff;
+            padding: 12px 16px;               /* 패딩 축소 */
+            margin-bottom: 20px;              /* 마진 축소 */
+            border-radius: 6px;               /* 모서리 약간 둥글게 */
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12); /* 그림자 가볍게 */
+        }
+
+        .section-title-black h2 {
+            color: #fff;
+            margin: 0;
+            font-size: 1.75rem;               /* 필요 시 폰트 크기 약간 조정 */
+        }
+
+        .section-title-black p {
+            color: #ddd;
+            margin: 8px 0 0;                  /* 여백도 살짝 줄임 */
+            font-size: 0.95rem;               /* 작은 본문 텍스트 */
+        }
+
+        .model-header-black {
+            background-color: #000;
+            color: #fff;
+            padding: 12px 16px;               /* 패딩 축소 */
+            text-align: center;
+            border-radius: 6px 6px 0 0;       /* 상단만 둥글게 */
+        }
+
+        .model-header-black h3 {
+            color: #fff;
+            margin: 0;
+            font-size: 1.25rem;
+        }
+
+        .model-header-black p {
+            margin: 6px 0 0;
+            opacity: 0.8;
+            font-size: 0.85rem;
+            color: #ddd;
+        }
+
+        /* Critical section visibility */
+        #logistic-regression, 
+        #random-forest, 
+        #model-specific-shap, 
+        #feature-impact-ranking, 
+        #model-performance-dashboard {
+            position: relative;
+            z-index: 10;
+            overflow: visible !important;
+        }
+        
+        /* Feature impact styles */
+        .feature-impact {
+            margin-bottom: 15px;
+        }
+        
+        .feature-name {
+            font-weight: 600;
+            width: 150px;
+        }
+        
+        .impact-bar-container {
+            flex-grow: 1;
+            height: 30px;
+            background-color: #f5f5f5;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .impact-bar {
+            height: 100%;
+            border-radius: 15px;
+        }
+        
+        .impact-value {
+            width: 50px;
+            text-align: right;
+            font-weight: 600;
+        }
+        
+        .positive {
+            background-color: #ff7675;
+        }
+        
+        .negative {
+            background-color: #74b9ff;
+        }
+        
+        
+        /* Code blocks */
+        .code-block {
+            font-family: 'Courier New', monospace;
+            background-color: #f2f2f2;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+            font-size: 14px;
+            overflow-x: auto;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background-color: #fff;
+                flex-direction: column;
+                padding: 20px;
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            }
+            
+            .nav-links.show {
+                display: flex;
+            }
+            
+            .nav-links li {
+                margin: 10px 0;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+
+        /* wider screens: brand left, links right */
+        @media (min-width: 768px) {
+            .brand   { flex: 0 0 auto; text-align: left; }
+            .contact-links { flex: 0 0 auto; justify-content: flex-end; }
+        }
+        /* =============================
+   FORCE VISIBILITY FOR CRITICAL SECTIONS
+   ============================= */
+
+        /* 1) Performance Dashboard */
+        .model-performance-dashboard {
+        position: relative;       /* establish a new stacking context */
+        z-index: 1000;            /* bring it above anything else */
+        background-color: #fff;   /* ensure full white background */
+        overflow: visible !important; /* let inner metrics bars extend if needed */
+        padding: 20px;            /* restore any lost padding */
+        }
+
+        /* 2) Feature Impact Ranking */
+        .feature-impact-ranking {
+        position: relative;
+        z-index: 1000;
+        background-color: #fff;
+        overflow: visible !important;
+        padding: 25px;f
+        }
+
+        /* optionally, if you still have inline-wrapper divs: */
+        .model-performance-dashboard,
+        .feature-impact-ranking {
+        box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        border-radius: 10px;
+        } 
+        .model-performance-dashboard {
+        position: relative;
+        z-index: 1000;               /* lift it above other sections */
+        overflow: visible !important; /* make sure internal charts aren't clipped */
+        }
+
+        .feature-impact-ranking {
+        position: relative;
+        z-index: 1000;
+        overflow: visible !important;
+        }
+           /* Feature impact styles */
+           .feature-impact {
+            margin-bottom: 15px;
+        }
+        
+        .feature-name {
+            font-weight: 600;
+            width: 150px;
+        }
+        
+        .impact-bar-container {
+            flex-grow: 1;
+            height: 30px;
+            background-color: #f5f5f5;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .impact-bar {
+            height: 100%;
+            border-radius: 15px;
+        }
+        
+        .impact-value {
+            width: 50px;
+            text-align: right;
+            font-weight: 600;
+        }
+        
+        .positive {
+            background-color: #ff7675;
+        }
+        
+        .negative {
+            background-color: #74b9ff;
+        }
+        
+       /* footer 전체를 flex 컨테이너로 */
+        .footer .slide-container {
+          display: flex;
+          align-items: center;      /* 수직 중앙정렬 */
+          justify-content: space-between;
+        }
+
+        /* 왼쪽 텍스트의 여백 제거 */
+        .footer-info {
+          margin: 0;
+          white-space: nowrap;
+          line-height: 1;           /* 아이콘과 높이 맞추기 */
+        }
+
+        /* 우측 연락처 링크들을 flex로 배치 */
+        .contact-links {
+          display: flex;
+          gap: 1.5rem;              /* 링크 간 간격 */
+          align-items: center;      /* 아이콘과 텍스트 수직 중앙정렬 */
+          margin: 0;
+          list-style: none;
+          padding: 0;
+        }
+
+        .contact-links a {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.3rem;              /* 아이콘과 텍스트 간격 */
+          font-size: 0.95rem;
+        }
+
+
+</style>
+    </style>
+</head>
+<body>
+    <!-- Header and Navigation -->
+<!-- Header and Navigation - UPDATE LINKS ORDER -->
+    <header>
+        <div class="header-container">
+            <div class="logo">Adaptive CRE Stress‑Test Pipeline
+            </div>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#slide-intro">Overview</a></li>
+                <li><a href="#executive-summary">Executive Summary</a></li>
+                <li><a href="#data-collection">Data Collection</a></li>
+                <li><a href="#modeling-pipeline">Modeling Pipeline</a></li>
+                <li><a href="#stress-scenarios">Stress Scenarios</a></li>
+                <li><a href="#evaluation">Evaluation</a></li>
+                <li><a href="#business-impact">Business Impact</a></li>
+                <li><a href="#next-steps">Next Steps</a></li>
+            </ul>
+        </div>
+    </header>
+
+    
+    <main>
+        <!-- 2) Drop this where you want the slide to appear -->
+    
+    <section class="slide-intro container">
+        <h1 class="slide-title">
+        Adaptive CRE Stress‑Test Pipeline
+        </h1>
+        <div class="byline">
+       <br> Yullie Yang </br>
+      </nav>Quantitative Analyst Candidate, CoStar Risk Analytics
+        </div>
+    </section>    
+        <!-- Executive Summary Section -->
+        <section id="executive-summary" class="container">
+            <h2>Executive Summary</h2>
+            <div class="grid-3">
+            <!-- Business Challenge Card -->
+            <div class="card">
+                <div class="card-header">
+                <i class="fas fa-exclamation-circle"></i> Objective
+                </div>
+                <p>
+                <li>Automate the ingestion of multi-source data </li>
+                <li>Engineer Features </li>
+                <li>Label stress periods adapatively</li> 
+            </div>
+        
+            <!-- Our Approach Card -->
+            <div class="card">
+                <div class="card-header">
+                <i class="fas fa-lightbulb"></i> How
+                </div>
+                <p>
+                <li>Rolling quantiles define stress</li>
+                <li>Contorlled label noise</li>
+                <li>Logisgtic Regression</li>
+            </div>
+        
+            <!-- Key Results Card -->
+            <div class="card">
+                <div class="card-header">
+                <i class="fas fa-chart-line"></i> Impact
+                </div>
+                <p>
+                <li> Achieved 78 % stress recall of stress window </li>
+                <li> ≤ 20 % false alarms </li>
+                <li> 6–9 months of CECL early warning</li>
+            </div>
+            </div>
+        </section>
+        
+        <!-- ========================== Agenda Section ========================== -->
+        <section id="agenda" class="container">
+            <h2>Today's Agenda</h2>
+
+            <!-- You can keep this div if you want consistent horizontal padding; 
+                swap .grid-3 for any class you already use (e.g., .list-wrapper) -->
+            <div class="agenda-wrapper">
+                <ol class="agenda-list">
+                    <li>Data Collection</li>
+                    <li>Modeling Pipeline</li>
+                    <li>Quantile-Based Stress Scenarios</li>
+                    <li>Label Noise &amp; Sampling</li>
+                    <li>Modeling Pipeline &amp; Validation</li>
+                    <li>Model Desing &amp; Enhancements</li>
+                    <li>Evalution &amp; Explainabiltiy</li>
+                    <li>Business Impact</li>
+                    <li>Next Steps &amp; Q&amp;A</li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- Data Collection Section -->
+        <section id="data-collection" class="container">
+            <h2>Data Collection </h2>
+            
+            <div class="grid-3">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-chart-line"></i> Macroeconomic Indicators
+                    </div>
+                    <div class="code-block">
+                        fetch_macro(api_key) pulls FEDFUNDS, UNRATE, GDP → data/macro.csv
+                    </div>
+                    <p>FEDFUNDS, UNRATE, GDP - regulatory-grade inputs the Fed already leans on for CCAR and Basel III</p>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-walking"></i> Google Mobility Data
+                    </div>
+                    <div class="code-block">
+                        fetch_mobility() filters Google Mobility for Massachusetts → data/mobility.csv
+                    </div>
+                    <p> Retail foot-traffic and workplace activity -real-time gauses of economic pulse</p>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-map-marked-alt"></i> Boston Zoning Information
+                    </div>
+                    <div class="code-block">
+                        fetch_zoning(resource_id) retrieves Boston zoning → data/zoning.csv
+                    </div>
+                    <p>Regulatory information on land use that impacts property valuations and development potential.</p>
+                </div>
+            </div>
+            
+        </section>
+        <!-- Data Preprocessing Section -->
+        <section id="modeling-pipeline" class="container">
+            <h2>Modeling Pipeline</h2>
+            
+            <!-- Timeline Style for Data Pipeline -->
+            <div class="card" style="margin-bottom: 40px;">
+                <div class="card-header">
+                  <i class="fas fa-cogs"></i> Automated Batch Scheduling
+                </div>
+                
+                <div style="position: relative; padding: 30px 0 20px 0;">
+                    <!-- Horizontal line -->
+                    <div style="position: absolute; top: 30px; left: 5%; width: 90%; height: 4px; background-color: #ddd; z-index: 1;"></div>
+                    
+                    <!-- Pipeline stages -->
+                    <div style="display: flex; justify-content: space-between; position: relative; z-index: 2;">
+                        <!-- Stage 1 -->
+                        <div style="text-align: center; width: 20%;">
+                            <div style="width: 50px; height: 50px; border-radius: 50%; background-color: #555; color: white; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+                                <i class="fas fa-database"></i>
+                            </div>
+                            <h4 style="margin-top: 15px; font-size: 16px;">Raw Data</h4>
+                            <p style="font-size: 14px;">3 data sources</p>
+                        </div>
+                        
+                        <!-- Stage 2 -->
+                        <div style="text-align: center; width: 20%;">
+                            <div style="width: 50px; height: 50px; border-radius: 50%; background-color: #777; color: white; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+                                <i class="fas fa-broom"></i>
+                            </div>
+                            <h4 style="margin-top: 15px; font-size: 16px;">NaN Handling</h4>
+                            <p style="font-size: 14px;">Median imputation</p>
+                        </div>
+                        
+                        <!-- Stage 3 -->
+                        <div style="text-align: center; width: 20%;">
+                            <div style="width: 50px; height: 50px; border-radius: 50%; background-color: #999; color: white; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+                                <i class="fas fa-random"></i>
+                            </div>
+                            <h4 style="margin-top: 15px; font-size: 16px;">Sampling</h4>
+                            <p style="font-size: 14px;">Class balance</p>
+                        </div>
+                        
+                        <!-- Stage 4 -->
+                        <div style="text-align: center; width: 20%;">
+                            <div style="width: 50px; height: 50px; border-radius: 50%; background-color: #555; color: white; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <h4 style="margin-top: 15px; font-size: 16px;">Model</h4>
+                            <p style="font-size: 14px;">LogR/RF choice</p>
+                        </div>
+                        
+                        <!-- Stage 5 -->
+                        <div style="text-align: center; width: 20%;">
+                            <div style="width: 50px; height: 50px; border-radius: 50%; background-color: #333; color: white; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <h4 style="margin-top: 15px; font-size: 16px;">Results</h4>
+                            <p style="font-size: 14px;">Threshold optim.</p>
+                        </div>
+                    </div>
+                </div>
+                
+            <!-- Split Half-and-Half for NaN + Label Noise -->
+            <div style="display: flex; margin-bottom: 30px; gap: 20px;">
+                <!-- Left Half: NaN Handling -->
+                <div style="flex: 1; background-color: #f8f8f8; border-radius: 8px; overflow: hidden; box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);">
+                    <div style="background-color: #222; color: white; padding: 15px 20px; font-size: 1.2rem; font-weight: 600;">
+                        <i class="fas fa-broom"></i> Intelligent NaN Handling
+                    </div>
+                    
+                    <div style="padding: 20px;">
+                        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                            <div style="width: 80px; height: 80px; flex-shrink: 0;">
+                                <svg viewBox="0 0 100 100" width="80" height="80">
+                                    <rect x="10" y="10" width="80" height="80" rx="10" fill="#f0f0f0" stroke="#ccc" stroke-width="2"/>
+                                    <text x="50" y="35" text-anchor="middle" font-family="sans-serif" font-size="16" fill="#999">NaN</text>
+                                    <line x1="25" y1="50" x2="75" y2="50" stroke="#555" stroke-width="3" stroke-dasharray="5,5"/>
+                                    <text x="50" y="75" text-anchor="middle" font-family="sans-serif" font-size="16" fill="#555">Median</text>
+                                </svg>
+                            </div>
+                            <div style="margin-left: 20px;">
+                                <p>Implemented robust missing data strategy with median imputation to preserve distributional properties while maintaining data integrity.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="code-block" style="background-color: #f0f0f0; border-left: 4px solid #333;">
+                            # SimpleImputer directly in pipeline<br>
+                            pipeline = ImbPipeline([<br>
+                            &nbsp;&nbsp;('imputer', SimpleImputer(strategy='median')),<br>
+                            &nbsp;&nbsp;('ros', sampler),<br>
+                            &nbsp;&nbsp;('clf', clf)<br>
+                            ])
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right Half: Label Noise -->
+                <div style="flex: 1; background-color: #f8f8f8; border-radius: 8px; overflow: hidden; box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);">
+                    <div style="background-color: #222; color: white; padding: 15px 20px; font-size: 1.2rem; font-weight: 600;">
+                        <i class="fas fa-random"></i> Label Noise Injection
+                    </div>
+                    
+                    <div style="padding: 20px;">
+                        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                            <div style="width: 80px; height: 80px; flex-shrink: 0;">
+                                <svg viewBox="0 0 100 100" width="80" height="80">
+                                    <circle cx="30" cy="30" r="15" fill="#555"/>
+                                    <circle cx="70" cy="30" r="15" fill="#fff" stroke="#555" stroke-width="2"/>
+                                    <circle cx="30" cy="70" r="15" fill="#fff" stroke="#555" stroke-width="2"/>
+                                    <circle cx="70" cy="70" r="15" fill="#555"/>
+                                    <circle cx="50" cy="50" r="8" fill="#c54343"/>
+                                    <line x1="50" y1="50" x2="70" y2="30" stroke="#c54343" stroke-width="2" stroke-dasharray="3,3"/>
+                                </svg>
+                            </div>
+                            <div style="margin-left: 20px;">
+                                <p>Applied controlled randomness to labels to simulate real-world data ambiguity and build robustness against borderline cases.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="code-block" style="background-color: #f0f0f0; border-left: 4px solid #333;">
+                            def add_noise_to_targets(df, target_col='target_hard', noise_frac=0.1):<br>
+                            &nbsp;&nbsp;"""Add label noise to target column"""<br>
+                            &nbsp;&nbsp;idx = df.sample(frac=noise_frac).index<br>
+                            &nbsp;&nbsp;df.loc[idx, target_col] = 1 - df.loc[idx, target_col]<br>
+                            &nbsp;&nbsp;return df
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid-3">
+              <div class="card">
+                  <div class="card-header">
+                      <i class="fas fa-exchange-alt"></i> Type Conversion
+                  </div>
+                  <p>Convert all features to numeric types, preserving date for time series analysis. This ensures compatibility with modeling algorithms.</p>
+                  <div class="code-block">
+                      df['UNRATE'] = pd.to_numeric(df['UNRATE'])<br>
+                      df['date'] = pd.to_datetime(df['date'])
+                  </div>
+              </div>
+              
+              <div class="card">
+                  <div class="card-header">
+                      <i class="fas fa-calendar-alt"></i> Time-Based Merge
+                  </div>
+                  <p>Align macroeconomic indicators with mobility data using date as the common key. This synchronizes all features to a common timeline.</p>
+                  <div class="code-block">
+                      # Merge datasets on date column<br>
+                      merged_df = pd.merge(macro_df, <br>
+                      &nbsp;&nbsp;mobility_df,<br>
+                      &nbsp;&nbsp;on='date',<br>
+                      &nbsp;&nbsp;how='inner')
+                  </div>
+              </div> 
+        <!-- After: 일반 설명 카드로 대체 -->
+        <div class="card" style="margin-bottom:30px;">
+          <div class="card-header">
+            <i class="fas fa-random"></i> Data Split
+          </div>
+          <p style="padding:20px; margin:0;">
+            • Ensures both stress and non‑stress examples appear in training and test sets.<br>
+            • Maintains class balance to improve evaluation reliability.
+          </p>
+        </div>
+
+        </section>
+
+                <!-- Modeling Section -->
+                <section id="stress-scenarios" class="container">
+                  <h2>Quantile-Based Stress Scenarios</h2>
+                  
+                  <div class="grid-2">
+                      <div class="card">
+                          <div class="card-header">
+                              <i class="fas fa-exclamation-triangle"></i> Mild Stress (target_or)
+                          </div>
+                          <div class="callout">
+                              <div class="callout-title">UNRATE ≥ 75th percentile OR Retail ≤ 25th percentile</div>
+                          </div>
+                          <p>Flags periods of either high unemployment or low retail traffic relative to historical patterns. Creates early warning indicators of potential market stress.</p>
+                          
+                      </div>
+                      
+                      <div class="card">
+                          <div class="card-header">
+                              <i class="fas fa-radiation-alt"></i> Severe Stress (target_hard)
+                          </div>
+                          <div class="callout">
+                              <div class="callout-title">UNRATE ≥ 75th percentile AND Retail ≤ 25th percentile</div>
+                          </div>
+                          <p>Highlights combined macro and consumer-activity shocks as red-alert conditions requiring immediate attention. Identifies highest-risk periods for CRE investors.</p>
+                      </div>
+                      
+                  </div>
+                  
+                  <div class="callout">
+                      <div class="callout-title">Why Quantile-Based Approach?</div>
+                      <p>Using quantile thresholds allows our model to adapt to changing economic conditions without requiring manual recalibration.</p>
+                  </div>
+              </section>
+
+
+              <!-- MACHINE LEARNING MODELS SECTION -->
+      <section id='ml-models' class='container'>
+        <div class='section-title-black'>
+          <h2>Hybrid Model Design &amp; Enhancements</h2>
+          <p>Comparison of model approaches for stress detection</p>
+        </div>
+
+        <!-- Hybrid model cards side-by-side -->
+        <div class='grid-2'>
+
+          <!-- Logistic Regression Card -->
+          <div id='logistic-regression' style='border-radius:5px;overflow:hidden;box-shadow:0 3px 10px rgba(0,0,0,0.08);position:relative;'>
+            <div class='model-header-black'>
+              <i class='fas fa-chart-line' style='font-size:24px;margin-bottom:10px;'></i>
+              <h3>Logistic Regression</h3>
+              <p>L2 Regularized Linear Model</p>
+            </div>
+            <div style='padding:20px;background-color:#fff;'>
+              <!-- Equation visualization -->
+              <div style='background-color:#f8f8f8;padding:15px;border-radius:5px;text-align:center;margin-bottom:15px;font-family:"Times New Roman",serif;'>
+                <p>We train an interpretable Logistic Regression baseline pipeline, then separately apply a Random Forest lift model for additional predictive power.</p>
+              </div>
+
+              <!-- Pros and Cons -->
+              <div style='display:flex;gap:10px;margin-top:20px;'>
+                <div style='flex:1;background-color:#f0f8f0;padding:10px;border-radius:5px;'>
+                  <h4 style='margin-top:0;color:#2a6a2a;'>Pros</h4>
+                  <ul style='margin:0;padding-left:20px;font-size:14px;'>
+                    <li>Interpretable Logistic Regression baseline</li>
+                    <li>Lightweight pipeline for quick deployment</li>
+                  </ul>
+                </div>
+                <div style='flex:1;background-color:#fff0f0;padding:10px;border-radius:5px;'>
+                  <h4 style='margin-top:0;color:#6a2a2a;'>Cons</h4>
+                  <ul style='margin:0;padding-left:20px;font-size:14px;'>
+                    <li>Two separate models to train and maintain</li>
+                    <li>Increased inference latency vs. single model</li>
+                  </ul>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Model Enhancement Card -->
+          <div id='logistic-regression' style='border-radius:5px;overflow:hidden;box-shadow:0 3px 10px rgba(0,0,0,0.08);position:relative;'>
+            <div class='model-header-black'>
+              <i class='fas fa-bolt' style='font-size:24px;margin-bottom:10px;'></i>
+              <h3>Model Enhancement</h3>
+              <p>Tree-Boosted Lift</p>
+            </div>
+            <div style='padding:20px;background-color:#fff;'>
+              <!-- Baseline -->
+              <p><strong>Baseline → Logistic Regression Pipeline</strong></p>
+              <ul style='margin-left:1.25rem;'>
+                <li>Interpretable coefficients → Linear SHAP values/li>
+                <li>Lightweight (&lt;50 KB) → instant Compass deployment</li>
+              </ul>
+
+              <!-- Lift -->
+              <p style='margin-top:1rem;'><strong>Lift → Random Forest Classifier</strong></p>
+              <ul style='margin-left:1.25rem;'>
+                <li>Trained separately on oversampled data (<code>n_estimators=10</code>, <code>max_depth=2</code>)</li>
+                <li>TExplained via Tree SHAP in same SHAP framework</li>
+              </ul>
+
+              <p style='margin-top:1rem;font-style:italic;'>We first deploy an interpretable LR pipeline, then apply RF as a lift model to boost recall—both explained consistently with SHAP.</p>
+              <div class="callout">
+                <div class="callout-title">Enhancement</div>
+                <p>We first deploy an interpretable LR pipeline, then apply RF as a lift model to boost recall—both explained consistently with SHAP.</p>
+            </div>
+            </div>
+          </div>
+
+
+
+
+        </div><!-- /.grid-2 -->
+
+        <!-- Optimal Threshold Selection (separate card) -->
+        <div class='card' style='margin-top:30px;'>
+          <div class='card-header'>
+            <i class='fas fa-sliders-h'></i> Optimal Threshold Selection
+          </div>
+
+          <div style='padding:25px;'>
+            <div style='display:flex;gap:30px;align-items:flex-start;'>
+              <!-- Left: ROC curve with threshold visual -->
+              <div style='flex:1;position:relative;'>
+                <svg width='100%' height='250' viewBox='0 0 400 250'>
+                  <!-- Axes -->
+                  <line x1='50' y1='200' x2='350' y2='200' stroke='#333' stroke-width='2'/>
+                  <line x1='50' y1='200' x2='50' y2='30' stroke='#333' stroke-width='2'/>
+
+                  <!-- Axis labels -->
+                  <text x='200' y='230' text-anchor='middle' font-size='14'>False Positive Rate</text>
+                  <text x='20' y='115' text-anchor='middle' font-size='14' transform='rotate(-90,20,115)'>True Positive Rate</text>
+
+                  <!-- Grid lines -->
+                  <line x1='50' y1='150' x2='350' y2='150' stroke='#ddd' stroke-width='1' stroke-dasharray='5,5'/>
+                  <line x1='50' y1='100' x2='350' y2='100' stroke='#ddd' stroke-width='1' stroke-dasharray='5,5'/>
+                  <line x1='50' y1='50' x2='350' y2='50' stroke='#ddd' stroke-width='1' stroke-dasharray='5,5'/>
+                  <line x1='125' y1='30' x2='125' y2='200' stroke='#ddd' stroke-width='1' stroke-dasharray='5,5'/>
+                  <line x1='200' y1='30' x2='200' y2='200' stroke='#ddd' stroke-width='1' stroke-dasharray='5,5'/>
+                  <line x1='275' y1='30' x2='275' y2='200' stroke='#ddd' stroke-width='1' stroke-dasharray='5,5'/>
+
+                  <!-- Title -->
+                  <text x='200' y='20' text-anchor='middle' font-size='14' font-weight='bold'>Threshold Selection</text>
+
+                  <!-- ROC Curve -->
+                  <path d='M50,200 Q80,130 125,100 T200,60 T275,40 T350,30' fill='none' stroke='#0063a3' stroke-width='3'/>
+
+                  <!-- Chance line -->
+                  <line x1='50' y1='200' x2='350' y2='30' stroke='#999' stroke-width='1' stroke-dasharray='5,5'/>
+
+                  <!-- Target point (0.2 FPR, 0.78 TPR) -->
+                  <circle cx='125' cy='70' r='6' fill='#c54343'/>
+
+                  <!-- Target point guides -->
+                  <line x1='50' y1='70' x2='125' y2='70' stroke='#c54343' stroke-width='1' stroke-dasharray='5,5'/>
+                  <line x1='125' y1='70' x2='125' y2='200' stroke='#c54343' stroke-width='1' stroke-dasharray='5,5'/>
+
+                  <!-- Target labels -->
+                  <text x='40' y='70' text-anchor='end' font-size='12' fill='#c54343'>0.78</text>
+                  <text x='125' y='215' text-anchor='middle' font-size='12' fill='#c54343'>0.20</text>
+
+                  <!-- Calibration points -->
+                  <circle cx='300' cy='35' r='3' fill='#333'/>
+                  <text x='310' y='35' font-size='10'>Threshold: 0.9</text>
+
+                  <circle cx='200' cy='60' r='3' fill='#333'/>
+                  <text x='210' y='60' font-size='10'>Threshold: 0.5</text>
+
+                  <circle cx='125' cy='70' r='3' fill='#c54343'/>
+                  <text x='135' y='70' font-size='10' fill='#c54343'>Optimal: 0.35</text>
+
+                  <circle cx='80' cy='130' r='3' fill='#333'/>
+                  <text x='90' y='130' font-size='10'>Threshold: 0.2</text>
+                </svg>
+              </div>
+              <!-- Right: explanatory text -->
+              <!-- Right: explanatory text -->
+              <div style="flex:1;font-size:16px;line-height:1.5;">
+                <h4 style="margin-top:0;font-size:18px;">Why 0.35?</h4>
+                <p>
+                    We compute Youden’s J (<code>youden_j = tpr - fpr</code>) for each threshold, then pick the first threshold from the <code>roc_curve</code> output
+                    where <strong>True Positive Rate ≥ 0.80</strong> and <strong>False Positive Rate ≤ 0.20</strong>,
+                    matching our portfolio risk guidelines.
+                </p>
+                <p class="so-what" style="margin-top:15px;font-size:18px;">
+                  <em>Business takeaway:</em> This threshold delivers early warning signals
+                  while keeping false alarms within acceptable limits.
+                </p>
+              </div>              
+            </div>
+          </div>
+        </div>
+      </section>
+              <section id="evaluation" class="container">
+            </div><!-- MODEL PERFORMANCE DASHBOARD SECTION -->
+                <!-- MODEL PERFORMANCE DASHBOARD SECTION -->
+                <section id="stress-scenarios" class="container">
+                  <h2>Evaluation</h2>
+
+
+                    <div style="background-color: #fff; border-radius: 10px; box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08); overflow: hidden; margin-bottom: 30px;">
+                        <!-- Header -->
+                        <div style="background-color: #000; color: white; padding: 20px; display: flex; justify-content: space-between; align-items: center;">
+                            <h3 style="margin: 0; color: #fff;">Model Performance Dashboard</h3>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="font-size: 12px; padding: 5px 10px; background-color: #333; border-radius: 20px;">AUC: 0.733</div>
+                                <div style="font-size: 12px; padding: 5px 10px; background-color: #333; border-radius: 20px;">Accuracy: 0.67</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Metrics Grid -->
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); padding: 20px; gap: 15px;">
+                            <!-- Metric 1: Detection Rate -->
+                            <div style="text-align: center; padding: 15px; background-color: #f8f8f8; border-radius: 8px; position: relative;">
+                                <div style="position: absolute; width: 100%; height: 5px; background-color: #eee; top: 0; left: 0; border-radius: 8px 8px 0 0;">
+                                    <div style="width: 78%; height: 100%; background-color: #4CAF50; border-radius: 8px 0 0 0;"></div>
+                                </div>
+                                <div style="font-size: 32px; font-weight: 700; color: #333; margin-top: 10px;">78%</div>
+                                <div style="font-size: 14px; color: #666;">Recall (Stress Detection)</div>
+                            </div>
+                            
+                            <!-- Metric 2: False Alarm Rate -->
+                            <div style="text-align: center; padding: 15px; background-color: #f8f8f8; border-radius: 8px; position: relative;">
+                                <div style="position: absolute; width: 100%; height: 5px; background-color: #eee; top: 0; left: 0; border-radius: 8px 8px 0 0;">
+                                    <div style="width: 20%; height: 100%; background-color: #f44336; border-radius: 8px 0 0 0;"></div>
+                                </div>
+                                <div style="font-size: 32px; font-weight: 700; color: #333; margin-top: 10px;">≤20%</div>
+                                <div style="font-size: 14px; color: #666;">False Positive Rate</div>
+                            </div>
+                            
+                            <!-- Metric 3: Precision -->
+                            <div style="text-align: center; padding: 15px; background-color: #f8f8f8; border-radius: 8px; position: relative;">
+                                <div style="position: absolute; width: 100%; height: 5px; background-color: #eee; top: 0; left: 0; border-radius: 8px 8px 0 0;">
+                                    <div style="width: 65%; height: 100%; background-color: #2196F3; border-radius: 8px 0 0 0;"></div>
+                                </div>
+                                <div style="font-size: 32px; font-weight: 700; color: #333; margin-top: 10px;">0.65</div>
+                                <div style="font-size: 14px; color: #666;">Precision (Stress)</div>
+                            </div>
+                            
+                            <!-- Metric 4: F1 Score -->
+                            <div style="text-align: center; padding: 15px; background-color: #f8f8f8; border-radius: 8px; position: relative;">
+                                <div style="position: absolute; width: 100%; height: 5px; background-color: #eee; top: 0; left: 0; border-radius: 8px 8px 0 0;">
+                                    <div style="width: 71%; height: 100%; background-color: #FF9800; border-radius: 8px 0 0 0;"></div>
+                                </div>
+                                <div style="font-size: 32px; font-weight: 700; color: #333; margin-top: 10px;">0.71</div>
+                                <div style="font-size: 14px; color: #666;">F1 Score (Stress)</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Classification Report Table -->
+                        <div style="padding: 0 20px 20px 20px;">
+                            <div style="background-color: #f8f8f8; border-radius: 8px; overflow: hidden;">
+                                <div style="padding: 15px; font-weight: 600; background-color: #000; color: white; border-bottom: 1px solid #ddd;">
+                                    Classification Report
+                                </div>
+                                <div style="padding: 15px; overflow-x: auto;">
+                                    <table style="width: 100%; border-collapse: collapse; min-width: 500px;">
+                                        <thead>
+                                            <tr style="background-color: #f0f0f0;">
+                                                <th style="padding: 10px; text-align: left; border-bottom: 1px solid #ddd;">Class</th>
+                                                <th style="padding: 10px; text-align: center; border-bottom: 1px solid #ddd;">Precision</th>
+                                                <th style="padding: 10px; text-align: center; border-bottom: 1px solid #ddd;">Recall</th>
+                                                <th style="padding: 10px; text-align: center; border-bottom: 1px solid #ddd;">F1-Score</th>
+                                                <th style="padding: 10px; text-align: center; border-bottom: 1px solid #ddd;">Support</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td style="padding: 10px; text-align: left; border-bottom: 1px solid #eee;">Normal Period (0)</td>
+                                                <td style="padding: 10px; text-align: center; border-bottom: 1px solid #eee;">0.83</td>
+                                                <td style="padding: 10px; text-align: center; border-bottom: 1px solid #eee;">0.61</td>
+                                                <td style="padding: 10px; text-align: center; border-bottom: 1px solid #eee;">0.70</td>
+                                                <td style="padding: 10px; text-align: center; border-bottom: 1px solid #eee;">31</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 10px; text-align: left; border-bottom: 1px solid #eee;">Stress Period (1)</td>
+                                                <td style="padding: 10px; text-align: center; border-bottom: 1px solid #eee;">0.54</td>
+                                                <td style="padding: 10px; text-align: center; border-bottom: 1px solid #eee;">0.78</td>
+                                                <td style="padding: 10px; text-align: center; border-bottom: 1px solid #eee;">0.64</td>
+                                                <td style="padding: 10px; text-align: center; border-bottom: 1px solid #eee;">18</td>
+                                            </tr>
+                                            <tr style="background-color: #f5f5f5;">
+                                                <td style="padding: 10px; text-align: left; border-bottom: 1px solid #eee; font-weight: 600;">Accuracy</td>
+                                                <td style="padding: 10px; text-align: center; border-bottom: 1px solid #eee;" colspan="3">0.67</td>
+                                                <td style="padding: 10px; text-align: center; border-bottom: 1px solid #eee;">49</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 10px; text-align: left; border-bottom: 1px solid #eee;">Macro Avg</td>
+                                                <td style="padding: 10px; text-align: center; border-bottom: 1px solid #eee;">0.68</td>
+                                                <td style="padding: 10px; text-align: center; border-bottom: 1px solid #eee;">0.70</td>
+                                                <td style="padding: 10px; text-align: center; border-bottom: 1px solid #eee;">0.67</td>
+                                                <td style="padding: 10px; text-align: center; border-bottom: 1px solid #eee;">49</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 10px; text-align: left;">Weighted Avg</td>
+                                                <td style="padding: 10px; text-align: center;">0.72</td>
+                                                <td style="padding: 10px; text-align: center;">0.67</td>
+                                                <td style="padding: 10px; text-align: center;">0.68</td>
+                                                <td style="padding: 10px; text-align: center;">49</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+              </section>
+  
+        
+                <!-- FEATURE IMPACT RANKING SECTION -->
+                <section id="feature-impact-ranking" class="container">        
+                    <!-- Feature Impact Ranking - Interactive Bar Chart Style -->
+                    <div style="background-color: #fff; border-radius: 10px; box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08); overflow: hidden; margin-bottom: 30px;">
+                        <!-- Header -->
+                        <div style="background-color: #000; color: white; padding: 20px;">
+                            <h3 style="margin: 0; display: flex; align-items: center; color: #fff;">
+                                <i class="fas fa-chart-bar" style="margin-right: 10px;"></i>
+                                Feature Impact Ranking
+                            </h3>
+                        </div>
+                        
+                        <div style="padding: 25px;">
+                            <!-- Feature explanation -->
+                            <div style="margin-bottom: 20px;">
+                                <p>SHAP values demonstrate the contribution of each feature to model predictions. Positive values (red) push predictions toward stress, while negative values (blue) indicate normal conditions.</p>
+                            </div>
+                            
+                            <!-- Interactive Bar Chart -->
+                            <div style="margin-bottom: 25px;">
+                                <!-- Feature 1: UNRATE -->
+                                <div style="margin-bottom: 15px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                                        <div style="font-weight: 600; width: 150px;">UNRATE</div>
+                                        <div style="flex-grow: 1; height: 30px; background-color: #f5f5f5; border-radius: 15px; overflow: hidden; position: relative;">
+                                            <div style="position: absolute; left: 50%; width: 2px; height: 30px; background-color: #ccc;"></div>
+                                            <div style="width: 45%; height: 100%; background-color: #ff7675; border-radius: 15px 0 0 15px; position: absolute; right: 50%;"></div>
+                                        </div>
+                                        <div style="width: 50px; text-align: right; font-weight: 600; color: #ff7675;">+0.42</div>
+                                    </div>
+                                    <div style="padding-left: 150px; font-size: 13px; color: #666;">Higher unemployment strongly indicates stress conditions</div>
+                                </div>
+                                
+                                <!-- Feature 2: Retail Mobility -->
+                                <div style="margin-bottom: 15px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                                        <div style="font-weight: 600; width: 150px;">Retail Mobility</div>
+                                        <div style="flex-grow: 1; height: 30px; background-color: #f5f5f5; border-radius: 15px; overflow: hidden; position: relative;">
+                                            <div style="position: absolute; left: 50%; width: 2px; height: 30px; background-color: #ccc;"></div>
+                                            <div style="width: 38%; height: 100%; background-color: #74b9ff; border-radius: 0 15px 15px 0; position: absolute; left: 50%;"></div>
+                                        </div>
+                                        <div style="width: 50px; text-align: right; font-weight: 600; color: #74b9ff;">-0.38</div>
+                                    </div>
+                                    <div style="padding-left: 150px; font-size: 13px; color: #666;">Reduced retail activity indicates potential CRE stress</div>
+                                </div>
+                                
+                                <!-- Feature 3: FEDFUNDS -->
+                                <div style="margin-bottom: 15px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                                        <div style="font-weight: 600; width: 150px;">FEDFUNDS</div>
+                                        <div style="flex-grow: 1; height: 30px; background-color: #f5f5f5; border-radius: 15px; overflow: hidden; position: relative;">
+                                            <div style="position: absolute; left: 50%; width: 2px; height: 30px; background-color: #ccc;"></div>
+                                            <div style="width: 29%; height: 100%; background-color: #ff7675; border-radius: 15px 0 0 15px; position: absolute; right: 50%;"></div>
+                                        </div>
+                                        <div style="width: 50px; text-align: right; font-weight: 600; color: #ff7675;">+0.29</div>
+                                    </div>
+                                    <div style="padding-left: 150px; font-size: 13px; color: #666;">Higher interest rates increase refinancing risk</div>
+                                </div>
+                                
+                                <!-- Feature 4: GDP Change -->
+                                <div style="margin-bottom: 15px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                                        <div style="font-weight: 600; width: 150px;">GDP Change</div>
+                                        <div style="flex-grow: 1; height: 30px; background-color: #f5f5f5; border-radius: 15px; overflow: hidden; position: relative;">
+                                            <div style="position: absolute; left: 50%; width: 2px; height: 30px; background-color: #ccc;"></div>
+                                            <div style="width: 22%; height: 100%; background-color: #74b9ff; border-radius: 0 15px 15px 0; position: absolute; left: 50%;"></div>
+                                        </div>
+                                        <div style="width: 50px; text-align: right; font-weight: 600; color: #74b9ff;">-0.22</div>
+                                    </div>
+                                    <div style="padding-left: 150px; font-size: 13px; color: #666;">Economic contraction correlates with CRE distress</div>
+                                </div>
+                                
+                                <!-- Feature 5: Workplace Mobility -->
+                                <div style="margin-bottom: 15px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                                        <div style="font-weight: 600; width: 150px;">Workplace Mob.</div>
+                                        <div style="flex-grow: 1; height: 30px; background-color: #f5f5f5; border-radius: 15px; overflow: hidden; position: relative;">
+                                            <div style="position: absolute; left: 50%; width: 2px; height: 30px; background-color: #ccc;"></div>
+                                            <div style="width: 18%; height: 100%; background-color: #74b9ff; border-radius: 0 15px 15px 0; position: absolute; left: 50%;"></div>
+                                        </div>
+                                        <div style="width: 50px; text-align: right; font-weight: 600; color: #74b9ff;">-0.18</div>
+                                    </div>
+                                    <div style="padding-left: 150px; font-size: 13px; color: #666;">Reduced office use signals vacancy risk</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+  <!-- Business Impact Section -->
+  <section id="business-impact" class="container">
+      <h2>Business Impact</h2>
+      
+      <div class="grid-3">
+          <div class="metric-box">
+              <div class="metric-value">78%</div>
+              <div class="metric-label">Detection Rate</div>
+              <p>of actual stress periods identified</p>
+          </div>
+          
+          <div class="metric-box">
+              <div class="metric-value">≤20%</div>
+              <div class="metric-label">False Alarms</div>
+              <p>limiting unnecessary interventions</p>
+          </div>
+          
+          <div class="metric-box">
+              <div class="metric-value">6-9</div>
+              <div class="metric-label">Month Lead Time</div>
+              <p>for proactive risk management</p>
+          </div>
+      </div>
+      
+      <h3>Translation to Business Value</h3>
+      <div class="grid-3">
+          <div class="card">
+              <div class="icon-container">
+                  <i class="fas fa-chart-line"></i>
+              </div>
+              <h4>Portfolio Management</h4>
+              <p>Optimize lending decisions and capital allocations through early identification of at-risk properties and markets, reducing potential defaults by up to 15%.</p>
+          </div>
+          
+          <div class="card">
+              <div class="icon-container">
+                  <i class="fas fa-cogs"></i>
+              </div>
+              <h4>Resource Allocation</h4>
+              <p>Deploy intervention teams efficiently with 6-month lead times, focusing mitigation efforts on highest-risk assets before stress conditions fully materialize.</p>
+          </div>
+          
+          <div class="card">
+              <div class="icon-container">
+                  <i class="fas fa-shield-alt"></i>
+              </div>
+              <h4>Regulatory Compliance</h4>
+              <p>Exceed stress testing requirements with transparent, reproducible methodologies and comprehensive audit trails that demonstrate proactive risk management.</p>
+          </div>
+      </div>
+      
+      <div class="callout">
+        <strong>CECL Tie-in:</strong> EL = PD × LGD × EAD → early stress flags give finance two quarters
+        to smooth loss-reserve swings. LGD is dynamically refined with CoStar rent & vacancy rates.
+     </div>
+  </section>
+  
+  <!-- Next Steps Section -->
+  <section id="next-steps" class="container">
+      <h2>Next Steps</h2>
+      
+                      <!-- === POWER BI INTEGRATION (updated) === -->
+                  <section id="pbi" class="container"><div class="card"><div class="card-header"><i class="fas fa-chart-bar"></i> Performance Dashboard in Power BI</div><div style="padding:20px"><div style="display:flex;gap:30px;align-items:flex-start;flex-wrap:wrap">
+                    <div style="flex:1;min-width:260px">
+                    <p>Inside Power BI we embed a tiny Python script that <strong>scores new loans</strong>, computes <strong>Expected Loss (EL = PD×LGD×EAD)</strong>, and streams that figure straight into the Compass dashboard tile.</p>
+                    <ul style="margin:15px 0 0 0;padding-left:20px"><li>Live CECL EL waterfall by property‑type</li><li>Interactive SHAP drill‑down for each loan</li><li>Real‑time scenario slider (rate +200 bp, etc.)</li><li>One‑click export to Compass API</li></ul>
+                    </div>
+                                <!-- Right: Power BI Mockup -->
+                                <div style="flex: 1; background-color: #f5f5f5; border-radius: 8px; padding: 15px; box-shadow: 0 1px 5px rgba(0,0,0,0.1);">
+                                    <div style="background-color: #f0f0f0; border-radius: 5px; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd;">
+                                        <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                                            <div style="width: 20px; height: 20px; background-color: #5b9bd5; border-radius: 3px; margin-right: 10px;"></div>
+                                            <div style="font-weight: 600; font-size: 14px;">Power BI - Python Visual</div>
+                                        </div>
+                                        <div style="height: 200px; background-color: #fff; border: 1px solid #ddd; border-radius: 3px; display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                                            <div style="color: #666; font-size: 16px; margin-bottom: 10px;">SHAP Feature Importance</div>
+                                            <div style="width: 90%; height: 120px; position: relative;">
+                                                <!-- Simplified SHAP visualization mockup -->
+                                                <div style="position: absolute; top: 10px; left: 10px; right: 10px; height: 20px; display: flex;">
+                                                    <div style="width: 120px; text-align: right; font-size: 12px; padding-right: 10px;">UNRATE</div>
+                                                    <div style="flex-grow: 1; background-color: #f8f8f8; border-radius: 3px; position: relative;">
+                                                        <div style="position: absolute; height: 20px; width: 60%; right: 0; background-color: #ff7675; border-radius: 0 3px 3px 0;"></div>
+                                                    </div>
+                                                </div>
+                                                <div style="position: absolute; top: 40px; left: 10px; right: 10px; height: 20px; display: flex;">
+                                                    <div style="width: 120px; text-align: right; font-size: 12px; padding-right: 10px;">Retail Mobility</div>
+                                                    <div style="flex-grow: 1; background-color: #f8f8f8; border-radius: 3px; position: relative;">
+                                                        <div style="position: absolute; height: 20px; width: 50%; left: 0; background-color: #74b9ff; border-radius: 3px 0 0 3px;"></div>
+                                                    </div>
+                                                </div>
+                                                <div style="position: absolute; top: 70px; left: 10px; right: 10px; height: 20px; display: flex;">
+                                                    <div style="width: 120px; text-align: right; font-size: 12px; padding-right: 10px;">FEDFUNDS</div>
+                                                    <div style="flex-grow: 1; background-color: #f8f8f8; border-radius: 3px; position: relative;">
+                                                        <div style="position: absolute; height: 20px; width: 40%; right: 0; background-color: #ff7675; border-radius: 0 3px 3px 0;"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    
+                                        <div style="flex:1;min-width:260px;background:#f5f5f5;border-radius:8px;padding:15px;box-shadow:0 1px 5px rgba(0,0,0,.1)"><p style="font-size:.8rem;text-align:center;margin-top:10px;color:#666">Python visual auto‑refreshes as new PD/LGD/EAD roll in.</p></div>
+                                           </div>
+                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+              </div></div></div></section>   
+  </section>
+</main>
+  <!-- Closing Section -->
+  <section id="closing" class="container">
+      <h2>Closing & Q &A</h2>
+
+      <div class="card">
+          <div class="card-header">
+              <i class="fas fa-handshake"></i> Why This Matters to CoStar
+          </div>
+          <p>
+              The <strong>Quantile-Driven CRE Stress-Test Pipeline</strong> fuses rigorous
+              quantitative methods with practical real-estate insight—exactly what
+              CoStar’s Compass model needs for sharper targeting, smarter loan pricing,
+              and proactive portfolio management.
+          </p>
+      </div>
+
+      <div class="grid-2">
+          <!-- Your Fit -->
+          <div class="card">
+              <div class="card-header">
+                  <i class="fas fa-user-check"></i> About the Presenter
+              </div>
+              <ul>
+                  <li>Credit Risk Model Development &amp; Validation</li>
+                  <li>Statistical Analysis &amp; Production Code</li>
+                  <li>Financial Data Mining  &amp; Business Translation</li>
+                  <li>Data Science Consultant at Guidehouse</li>
+                  <li>Data Science and Application Developement intern at Federal Reserve Board</li>
+              </ul>
+          </div>
+
+          <!-- Quick Impact Metrics (optional) -->
+          <div class="card">
+              <div class="card-header">
+                  <i class="fas fa-chart-line"></i> Proven Impact
+              </div>
+              <ul>
+                  <li><strong>78 % stress-period recall</strong> with &lt; 20 % false alarms</li>
+                  <li><strong>6–9-month</strong> early warning horizon</li>
+                  <li>Scalable to <strong>&gt;1 M</strong> property-loan records</li>
+              </ul>
+          </div>
+      </div>
+          
+<footer class="footer">
+  <div class="slide-container">
+    <div class="footer-info">
+      Yullie Yang, Quantitative Analyst Candidate, CoStar Risk Analytics
+    </div>
+    <nav class="contact-links">
+      <a href="mailto:yullieyang@gmail.com"><i class="fas fa-envelope"></i> yullieyang@gmail.com</a>
+      <a href="tel:+12406204718"><i class="fas fa-phone"></i> (240) 620‑4718</a>
+      <a href="https://github.com/yullieyang" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+      <a href="https://www.linkedin.com/in/yullieyang" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
+    </nav>
+  </div>
+</footer>
+
+
+
+<script>
+  // Mobile menu toggle
+  document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+      document.getElementById('navLinks').classList.toggle('show');
+  });
+  
+  // Smooth scrolling for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          
+          document.querySelector(this.getAttribute('href')).scrollIntoView({
+              behavior: 'smooth'
+          });
+          
+          // Close mobile menu if open
+          document.getElementById('navLinks').classList.remove('show');
+      });
+  });
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+const ctx = document.getElementById('rocChart').getContext('2d');
+const fpr = [0,0.05,0.10,0.15,0.20,0.25,0.30,0.40,0.50,0.60,0.70,0.80,0.90,1.0];
+const tpr = [0,0.35,0.55,0.68,0.78,0.82,0.85,0.88,0.91,0.93,0.95,0.97,0.99,1.0];
+
+const rocChart = new Chart(ctx, {
+  type: 'line',
+  data: {
+    datasets: [
+      {
+        label: 'ROC Curve',
+        data: fpr.map((x,i)=>({ x, y: tpr[i] })),
+        borderColor: '#0063a3',
+        backgroundColor: 'rgba(0,99,163,0.1)',
+        borderWidth: 3,
+        fill: true,
+        pointRadius: 0,
+        tension: 0.4
+      },
+      {
+        label: 'Chance',
+        data: [{x:0,y:0},{x:1,y:1}],
+        borderColor: '#999',
+        borderDash: [5,5],
+        pointRadius: 0,
+        fill: false
+      },
+      {
+        label: 'Operating Point',
+        data: [{ x:0.2, y:0.78 }],
+        borderColor: '#c54343',
+        backgroundColor: '#c54343',
+        pointRadius: 6,
+        showLine: false
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => ctx.dataset.label==='Operating Point'
+            ? 'FPR: 20%, TPR: 78%'
+            : `TPR: ${(ctx.parsed.y*100).toFixed(0)}%, FPR: ${(ctx.parsed.x*100).toFixed(0)}%`
+        }
+      }
+    },
+    scales: {
+      x: {
+        type: 'linear',
+        min:0, max:1,
+        title: { display:true, text:'False Positive Rate', font:{size:14,weight:'600'}, color:'#555' },
+        ticks: { callback: v=>`${(v*100).toFixed(0)}%` },
+        grid: { color:'rgba(0,0,0,0.05)' }
+      },
+      y: {
+        type: 'linear',
+        min:0, max:1,
+        title: { display:true, text:'True Positive Rate', font:{size:14,weight:'600'}, color:'#555' },
+        ticks: { callback: v=>`${(v*100).toFixed(0)}%` },
+        grid: { color:'rgba(0,0,0,0.05)' }
+      }
+    },
+    animation: { duration:1500 },
+    elements: { line:{ tension:0.4 } }
+  }
+});
+
+// add dashed connector lines and annotations
+const drawOrig = rocChart.draw;
+rocChart.draw = function() {
+  drawOrig.apply(this, arguments);
+  const {ctx, scales:{x:yScale, x: xScale, y: yScale}} = this; // chart.ctx etc
+  const px = this.scales.x.getPixelForValue(0.2);
+  const py = this.scales.y.getPixelForValue(0.78);
+  ctx.save();
+  ctx.setLineDash([5,5]);
+  ctx.strokeStyle='rgba(197,67,67,0.7)';
+  ctx.lineWidth=1;
+  ctx.beginPath();
+  ctx.moveTo(this.scales.x.getPixelForValue(0), py);
+  ctx.lineTo(px, py);
+  ctx.moveTo(px, this.scales.y.getPixelForValue(0));
+  ctx.lineTo(px, py);
+  ctx.stroke();
+  ctx.restore();
+  ctx.save();
+  ctx.fillStyle='#c54343';
+  ctx.font='12px Tinos';
+  ctx.textAlign='center';
+  ctx.fillText('20% FPR', px, this.scales.y.getPixelForValue(0)+20);
+  ctx.textAlign='right';
+  ctx.fillText('78% TPR', this.scales.x.getPixelForValue(0)-4, py+4);
+  ctx.restore();
+};
+rocChart.update();
+})
+// Tab functionality for data splitting section
+document.addEventListener('DOMContentLoaded', function() {
+// Get all tab buttons and content
+const tabBtns = document.querySelectorAll('.tab-btn');
+const tabContents = document.querySelectorAll('.tab-content');
+
+// Add click event listeners to all tab buttons
+tabBtns.forEach(btn => {
+  btn.addEventListener('click', function() {
+      // Remove active class from all buttons
+      tabBtns.forEach(b => b.classList.remove('active'));
+      b.style.backgroundColor = '';
+      b.style.color = '';
+      
+      // Add active class to clicked button
+      this.classList.add('active');
+      this.style.backgroundColor = '#555';
+      this.style.color = 'white';
+      
+      // Hide all tab contents
+      tabContents.forEach(content => {
+          content.style.display = 'none';
+      });
+      
+      // Show the corresponding tab content
+      const tabId = this.id.replace('-btn', '-content');
+      document.getElementById(tabId).style.display = 'block';
+  });
+});
+});
+</script>
+</body>
+</html>
+
+
+  
