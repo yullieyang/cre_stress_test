@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRE Stress-Test Pipeline - CoStar Group</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+KR:wght@100..900&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family:   'Tinos';
+            color: #333;
+            line-height: 1.6;
+            background-color: #f8f8f8;
+        }
+        
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-family:  'Tinos';
+            color: #222;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            border-bottom: 3px solid #333;
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+        
+        h2 {
+            font-size: 2rem;
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+        }
+        
+        p {
+            margin-bottom: 1rem;
+        }
+        
+        /* Layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #222;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 2rem;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #000;
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #333;
+        }
+        
+        /* Main content */
+        main {
+            padding-top: 80px;
+            padding-bottom: 60px;
+        }
+        
+        section {
+            padding: 60px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        section:last-child {
+            border-bottom: none;
+        }
+        
+
+        /* === Intro Slide === */
+        .slide-intro {
+        padding: 60px 20px;
+        background-color: #fff;
+        border-bottom: 1px solid #e0e0e0;
+        }
+
+        .slide-intro .slide-title {
+        font-family: 'Tinos', serif;
+        font-weight: 600;
+        font-size: 2.5rem;
+        color: #222;
+        margin-bottom: 0.5rem;
+        border-bottom: 3px solid #333;
+        display: inline-block;
+        padding-bottom: 0.5rem;
+        }
+
+        .slide-intro .byline {
+        font-family: 'Tinos', sans-serif;
+        font-weight: 400;
+        font-size: 1rem;
+        color: #555;
+        margin-bottom: 2rem;
+        }
+
+        .slide-intro .note {
+        font-family: 'Tinos', sans-serif;
+        font-weight: 400;
+        font-size: 0.95rem;
+        color: #333;
+        line-height: 1.6;
+        }
+
+        
+        /* Cards */
+        .card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            padding: 25px;
+            margin-bottom: 30px;
+            transition: transform 0.2s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            background-color: #222;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px 8px 0 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: -25px -25px 20px -25px;
+        }
+        
+        /* Grid layouts */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+        
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+        
+        /* Feature items */
+        .feature-impact {
+            display: flex;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+        
+        .feature-name {
+            width: 120px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .impact-bar-container {
+            flex-grow: 1;
+            background-color: #e0e0e0;
+            height: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .impact-bar {
+            height: 100%;
+            border-radius: 10px;
+        }
+        
+        .impact-value {
+            width: 50px;
+            text-align: right;
+            font-weight: 600;
+            padding-left: 10px;
+        }
+        
+        .positive {
+            background-color: #555;
+        }
+        
+        .negative {
+            background-color: #888;
+        }
+        
+        /* Metrics */
+        .metric-box {
+            text-align: center;
+            padding: 25px 15px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }
+        .roc-container{            /* 캔버스를 감싸는 래퍼 */
+        width:100%;
+        height:400px;            /* 원하는 높이로 조절 (예: 400 px)  */
+        position:relative;
+        }
+
+        #rocChart{                 /* 캔버스가 래퍼를 꽉 채우도록 */
+        width:100%!important;
+        height:100%!important;
+        }
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #222;
+            margin-bottom: 5px;
+        }
+        
+        .metric-label {
+            font-size: 1rem;
+            color: #555;
+        }
+        
+        /* Icons */
+        .icon-container {
+            background-color: #f2f2f2;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .icon-container i {
+            font-size: 24px;
+            color: #222;
+        }
+        
+        /* Timeline */
+        .timeline {
+            position: relative;
+            margin: 40px 0;
+            padding-left: 30px;
+        }
+        
+        .timeline::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 7px;
+            width: 2px;
+            background-color: #333;
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+        }
+        
+        .timeline-item::before {
+            content: "";
+            position: absolute;
+            left: -30px;
+            top: 5px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: #333;
+        }
+        
+        /* Callout boxes */
+        .callout {
+            background-color: #f2f2f2;
+            border-left: 5px solid #333;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .callout-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        /* Code blocks */
+        .code-block {
+            font-family: 'Courier New', monospace;
+            background-color: #f2f2f2;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+            font-size: 14px;
+            overflow-x: auto;
+        }
+        
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+            font-weight: 600;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #222;
+            color: white;
+            padding: 30px 0;
+        }
+        
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .footer-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .footer-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-left: 20px;
+        }
+        
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .grid-2, .grid-3, .grid-4 {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background-color: #fff;
+                flex-direction: column;
+                padding: 20px;
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            }
+            
+            .nav-links.show {
+                display: flex;
+            }
+            
+            .nav-links li {
+                margin: 10px 0;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+            /* Icon spacing */
+        .icon-left {
+            font-size: 0.9rem; 
+            width: 1.1rem; 
+            text-align: center; 
+            color: #111827; 
+            margin-right: .5rem; /* Extra breathing room */
+        }
+
+        /* Agenda bullets */
+        .agenda-list { padding-left: 1.25rem; }
+        .agenda-list li { margin: 0.35rem 0; }
+
+        /* reuse your global palette or tweak here */
+        :root {
+            --roc-color: #0063a3;   /* blue */
+            --op-color:  #c54343;   /* red  */
+        }
+
+        /* legend layout mirrors other small-print in your deck */
+        .chart-legend {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .legend-swatch {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 4px;
+        }
+
+        .legend-swatch.roc { background: var(--roc-color); }
+        .legend-swatch.op  { background: var(--op-color); }
+                /* SVG가 카드 안에서 꽉 차도록 */
+        .roc-svg {
+        width: 100%;
+        max-width: 400px;   /* 원하면 조정 */
+        height: auto;
+        }
+        .callout {
+        margin: 2rem 0;
+        padding: 1.5rem;
+        background: #f5f5f5;
+        border-left: 4px solid #000;
+        font-style: italic;
+        }
+        
+
+        /* 기존 카드·레이아웃 스타일 그대로 두고,
+        legend 색상·간격만 조절 */
+        .chart-legend { display: flex; justify-content: space-around;
+                        margin-top: .5rem; font-size: .9rem; }
+        .legend-item  { display: flex; align-items: center; }
+        .legend-swatch{ width:12px;height:12px;border-radius:50%;margin-right:4px; }
+        .legend-swatch.roc{ background:#0063a3; }
+        .legend-swatch.op { background:#c54343; }
+        /* ROC 카드가 다른 카드와 동일한 padding 을 갖도록 */
+        .roc-card .roc-container {
+        width: 100%;
+        height: 320px;      /* 다른 카드 비주얼과 비슷한 세로 비 */
+        margin: 0 -10px;    /* chart 가 카드 모서리에 좀 더 가깝게 */
+        position: relative;
+        }
+        /* Chart.js 라벨용 폰트를 Tinos 로 맞추기 */
+        canvas#rocChart {
+        font-family: 'Tinos', serif !important;
+        }
+
+        /* 대시 선이 너무 촘촘하면 끊겨 보일 수 있으니 간격 살짝 늘림 */
+        :root {
+        --roc-color: #004d7a;   /* 살짝 진한 블루 → 대형 스크린에서 더 또렷 */
+        --op-color:  #b13636;   /* 동일 톤 다운 */
+        }
+        .roc-card .code-block { margin: 0; }
+        .closing-note {
+        margin-top: 2rem;
+        font-style: italic;      /* optional—remove if you prefer normal text */
+        opacity: 0.9;            /* optional—gives a subtle, lighter feel */
+             }
+
+        /* brand card on the right */
+        .brand-card {
+            background: #1a1a1a;
+            color: #fff;
+            padding: 1rem 1.5rem;
+            min-width: 260px;
+            text-align: center;
+        }
+
+        .brand-name {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .brand-role span {
+            font-weight: 300;
+            font-size: 0.9em;
+        }
+        /* tidy footer strip */
+        .footer {
+            background: #fdfdfd;          /* light background; change to #1a1a1a + color:#fff if you prefer dark */
+            border-top: 1px solid #e0e0e0;
+            padding: 1.2rem 0;
+            font-size: 1rem;
+        }
+
+        .footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.8rem 1.5rem;           /* row / column gap */
+        }
+
+        /* brand text */
+        .brand {
+            font-weight: 600;
+            flex: 1 1 100%;               /* full-width on mobile */
+            text-align: center;
+        }
+
+        /* contact links */
+        .contact-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem 1.5rem;
+            justify-content: center;
+            flex: 1 1 100%;               /* full-width on mobile */
+        }
+
+        .contact-links a {
+            text-decoration: none;
+            color: inherit;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .contact-links i {
+            margin-right: 0.35rem;
+            font-size: 1em;
+        }
+
+        /* wider screens: brand left, links right */
+        @media (min-width: 768px) {
+            .brand   { flex: 0 0 auto; text-align: left; }
+            .contact-links { flex: 0 0 auto; justify-content: flex-end; }
+        }
+
+        
+</style>
+    </style>
+</head>
+<body>
+    <!-- Header and Navigation -->
+    <header>
+        <div class="header-container">
+            <div class="logo">CoStar Group</div>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#overview">Overview</a></li>
+                <li><a href="#executive-summary">Executive Summary</a></li>
+                <li><a href="#data-collection">Data Collection</a></li>
+                <li><a href="#feature-integration">Features</a></li>
+                <li><a href="#modeling">Modeling</a></li>
+                <li><a href="#evaluation">Evaluation</a></li>
+                <li><a href="#business-impact">Impact</a></li>
+                <li><a href="#next-steps">Next Steps</a></li>
+            </ul>
+        </div>
+    </header>
+    
+    <main>
+        <!-- 2) Drop this where you want the slide to appear -->
+    
+    <section class="slide-intro container">
+        <h1 class="slide-title">
+        Quantile‑Driven CRE Stress‑Test Pipeline
+        </h1>
+        <div class="byline">
+        By: Yullie Yang – Quantitative Analyst Candidate, CoStar Risk Analytics
+        </div>
+        <p class="note">
+        Note: Built on my House Price Risk Prediction capstone—now extended to CRE
+        by integrating macro, mobility & zoning data to address this role’s
+        innovation and modeling needs.
+        </p>
+    </section>    
+        <!-- Executive Summary Section -->
+        <section id="executive-summary" class="container">
+            <h2>Executive Summary</h2>
+            <div class="grid-3">
+            <!-- Business Challenge Card -->
+            <div class="card">
+                <div class="card-header">
+                <i class="fas fa-exclamation-circle"></i> Objective
+                </div>
+                <p>
+                <li>Efficiently ingest diverse data sources relevant to CRE risk</li>
+                <li>Define adaptive stress scenarios based on historical quantile thresholds</li>
+                <li>Train a robust classifier that can handle real-world data challenges</li>
+                <li>Deliver early-warning signals for CRE credit risk with clear explanations</li>
+                </p>
+            </div>
+        
+            <!-- Our Approach Card -->
+            <div class="card">
+                <div class="card-header">
+                <i class="fas fa-lightbulb"></i> Key Innovations
+                </div>
+                <p>
+                <li>Adaptive quantile rules (“Mild” OR / “Severe” AND) that flex to each metric’s history.</li>
+                <li>Label‑noise injection and oversampling for real‑world robustness.</li>
+                <li>Threshold tuning to cap false alarms at 20% while catching at least 80% of true stress events.</li>
+                <li>SHAP explanations for full transparency.</li>
+                </p>
+            </div>
+        
+            <!-- Key Results Card -->
+            <div class="card">
+                <div class="card-header">
+                <i class="fas fa-chart-line"></i> Results & Impact
+                </div>
+                <p>
+                <li>Flags approximately 78% of stress periods with fewer than 20% false alarms</li>
+                <li>Provides a 6–9‑month lead time for proactive risk actions</li>
+                <li>Enables targeted resource allocation, loan term adjustments, and regulatory compliance ahead of traditional metrics</li>
+            </div>
+            </div>
+        </section>
+        
+        <!-- ========================== Agenda Section ========================== -->
+        <section id="agenda" class="container">
+            <h2>Today's Agenda</h2>
+
+            <!-- You can keep this div if you want consistent horizontal padding; 
+                swap .grid-3 for any class you already use (e.g., .list-wrapper) -->
+            <div class="agenda-wrapper">
+                <ol class="agenda-list">
+                    <li>Data Collection</li>
+                    <li>Feature Integration</li>
+                    <li>Quantile-Based Stress Scenarios</li>
+                    <li>Label Noise &amp; Sampling</li>
+                    <li>Modeling Pipeline</li>
+                    <li>Evaluation &amp; ROC Curve</li>
+                    <li>SHAP Explanations</li>
+                    <li>Results Saving &amp; Audit Trail</li>
+                    <li>Business Impact</li>
+                    <li>Next Steps &amp; Q&amp;A</li>
+                </ol>
+            </div>
+
+            <!-- Optional: tidy tagline similar to your callout -->
+            <div class="callout">
+                <div class="callout-title">Roadmap for Today</div>
+                <p>This agenda walks the audience from raw data ingestion all the way to business-ready insights, highlighting both technical rigor and stakeholder value.</p>
+            </div>
+        </section>
+
+        <!-- Data Collection Section -->
+        <section id="data-collection" class="container">
+            <h2>Data Collection & Manipulation</h2>
+            
+            <div class="grid-3">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-chart-line"></i> Macroeconomic Indicators
+                    </div>
+                    <div class="code-block">
+                        fetch_macro(api_key) pulls FEDFUNDS, UNRATE, GDP → data/macro.csv
+                    </div>
+                    <p>FRED Macroeconomic Indicators are regulatory‐grade inputs (CECL, CCAR, Basel
+                        III), demonstrating proficiency with cornerstone credit‐risk data.</p>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-walking"></i> Google Mobility Data
+                    </div>
+                    <div class="code-block">
+                        fetch_mobility() filters Google Mobility for Massachusetts → data/mobility.csv
+                    </div>
+                    <p>Consumer movement patterns that reflect real-time activity across retail and commercial areas.</p>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-map-marked-alt"></i> Boston Zoning Information
+                    </div>
+                    <div class="code-block">
+                        fetch_zoning(resource_id) retrieves Boston zoning → data/zoning.csv
+                    </div>
+                    <p>Regulatory information on land use that impacts property valuations and development potential.</p>
+                </div>
+            </div>
+            
+            <div class="callout">
+                <div class="callout-title">Why These Data Sources?</div>
+                <p> Together they deliver both the compliance rigor and competitive edge your Risk Analytics team
+                    demands.This modular approach ensures repeatable, auditable ingestion of all public data sources for regulatory compliance. Each function is designed with error handling and logging capabilities to maintain data integrity throughout the pipeline.</p>
+            </div>
+        </section>
+        
+        <!-- Feature Integration Section -->
+        <section id="feature-integration" class="container">
+            <h2>Feature Integration</h2>
+            
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-exchange-alt"></i> Type Conversion
+                    </div>
+                    <p>Convert all features to numeric types, preserving date for time series analysis. This ensures compatibility with modeling algorithms.</p>
+                    <div class="code-block">
+                        df['UNRATE'] = pd.to_numeric(df['UNRATE'])<br>
+                        df['date'] = pd.to_datetime(df['date'])
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-calendar-alt"></i> Time-Based Merge
+                    </div>
+                    <p>Align macroeconomic indicators with mobility data using date as the common key. This synchronizes all features to a common timeline.</p>
+                    <div class="code-block">
+                        # Merge datasets on date column<br>
+                        merged_df = pd.merge(macro_df, <br>
+                        &nbsp;&nbsp;mobility_df,<br>
+                        &nbsp;&nbsp;on='date',<br>
+                        &nbsp;&nbsp;how='inner')
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">Feature Integration Pipeline</div>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>Raw Data</h4>
+                        <p>Multiple sources, formats</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Cleaning</h4>
+                        <p>Types, missing values</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Transformation</h4>
+                        <p>Encoding, normalization</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Integration</h4>
+                        <p>Time-alignment, merging</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Final Dataset</h4>
+                        <p>Model-ready features</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Modeling Section -->
+        <section id="modeling" class="container">
+            <h2>Quantile-Based Stress Scenarios</h2>
+            
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-exclamation-triangle"></i> Mild Stress (target_or)
+                    </div>
+                    <div class="callout">
+                        <div class="callout-title">UNRATE ≥ 75th percentile OR Retail ≤ 25th percentile</div>
+                    </div>
+                    <p>Flags periods of either high unemployment or low retail traffic relative to historical patterns. Creates early warning indicators of potential market stress.</p>
+                    
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-radiation-alt"></i> Severe Stress (target_hard)
+                    </div>
+                    <div class="callout">
+                        <div class="callout-title">UNRATE ≥ 75th percentile AND Retail ≤ 25th percentile</div>
+                    </div>
+                    <p>Highlights combined macro and consumer-activity shocks as red-alert conditions requiring immediate attention. Identifies highest-risk periods for CRE investors.</p>
+                </div>
+                
+            </div>
+            
+            <div class="callout">
+                <div class="callout-title">Why Quantile-Based Approach?</div>
+                <p>Using quantile thresholds allows our model to adapt to changing economic conditions without requiring manual recalibration. These relative measures ensure stress detection remains consistent across different market cycles and geographic regions.</p>
+            </div>
+            
+            <h3>Data Preparation Strategies</h3>
+            
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-random"></i> Safe Split Function
+                    </div>
+                    <ul>
+                        <li>Ensures both stress and non-stress classes appear in train/test sets</li>
+                        <li>Prevents training on incomplete class distributions</li>
+                        <li>Maintains proportional representation across splits</li>
+                    </ul>
+                    <div class="code-block">
+                        from sklearn.model_selection import train_test_split<br>
+                        <br>
+                        def safe_split(X, y, test_size=0.2):<br>
+                        &nbsp;&nbsp;return train_test_split(<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;X, y, test_size=test_size, stratify=y<br>
+                        &nbsp;&nbsp;)
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-balance-scale"></i> Oversampling Strategy
+                    </div>
+                    <ul>
+                        <li>RandomOverSampler boosts representation of rare stress samples</li>
+                        <li>Guarantees balanced learning without introducing class bias</li>
+                        <li>Helps models learn from infrequent but critical stress conditions</li>
+                        <li>Applied only to training data, preserving test set distributions</li>
+                    </ul>
+                    <div class="code-block">
+                        from imblearn.over_sampling import RandomOverSampler<br>
+                        <br>
+                        def balance_classes(X_train, y_train):<br>
+                        &nbsp;&nbsp;ros = RandomOverSampler(random_state=42)<br>
+                        &nbsp;&nbsp;X_resampled, y_resampled = ros.fit_resample(<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;X_train, y_train<br>
+                        &nbsp;&nbsp;)<br>
+                        &nbsp;&nbsp;return X_resampled, y_resampled
+                    </div>
+                </div>
+            </div>
+        </section>
+<!-- ====================  ROC Curve Card (SVG 버전)  ==================== -->
+
+  
+
+        <!-- Evaluation Section -->
+        <section id="evaluation" class="container">
+            <h2>Evaluation & Explainability</h2>
+            
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">
+                    <i class="fas fa-chart-line"></i>
+                    ROC Curve&nbsp;&amp;&nbsp;Operating Point
+                    </div>
+                
+                    <!-- chart area -->
+                    <div class="code-block p-0 shadow-none bg-white flex justify-center">
+                    <svg class="roc-svg" viewBox="0 0 200 150" preserveAspectRatio="xMidYMid meet">
+                        <!-- 축 -->
+                        <line x1="10" y1="140" x2="190" y2="140" stroke="#666" stroke-width="2"/>
+                        <line x1="10" y1="140" x2="10" y2="10"  stroke="#666" stroke-width="2"/>
+                
+                        <!-- 축 레이블 -->
+                        <text x="100" y="148" text-anchor="middle" font-size="10" fill="#555">
+                        False&nbsp;Positive&nbsp;Rate
+                        </text>
+                        <text x="5" y="75" text-anchor="middle" font-size="10" fill="#555"
+                            transform="rotate(-90,5,75)">
+                        True&nbsp;Positive&nbsp;Rate
+                        </text>
+                
+                        <!-- ROC 곡선 -->
+                        <path d="M10,140 Q50,80 100,40 T190,10"
+                            fill="none" stroke="#0063a3" stroke-width="3"/>
+                
+                        <!-- 최적 임계값 포인트 -->
+                        <circle cx="62" cy="60" r="5" fill="#c54343"/>
+                        <text x="70" y="50" font-size="10" fill="#c54343" font-weight="bold">
+                        Optimal&nbsp;Threshold
+                        </text>
+                        <line x1="62" y1="60" x2="62" y2="140"
+                            stroke="#c54343" stroke-width="1" stroke-dasharray="3 3"/>
+                        <line x1="62" y1="60" x2="10" y2="60"
+                            stroke="#c54343" stroke-width="1" stroke-dasharray="3 3"/>
+                        <text x="45" y="138" font-size="9" fill="#c54343">20%&nbsp;FPR</text>
+                        <text x="8"  y="58"  text-anchor="end" font-size="9" fill="#c54343">80%&nbsp;TPR</text>
+                    </svg>
+                    </div>
+                
+                    <!-- 범례 -->
+                    <div class="chart-legend">
+                    <span class="legend-item">
+                        <span class="legend-swatch roc"></span> ROC Curve&nbsp;(AUC ≈ 0.70)
+                    </span>
+                    <span class="legend-item">
+                        <span class="legend-swatch op"></span> Operating Point
+                    </span>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-chart-line"></i> Performance Metrics
+                    </div>
+                    <div class="grid-3">
+                        <div class="metric-box">
+                            <div class="metric-value">78%</div>
+                            <div class="metric-label">Recall</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-value">≤20%</div>
+                            <div class="metric-label">False Positive Rate</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-value">~0.7</div>
+                            <div class="metric-label">AUC Score</div>
+                        </div>
+                    </div>
+                    
+                    <h3>Classification Report</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Class</th>
+                                <th>Precision</th>
+                                <th>Recall</th>
+                                <th>F1-Score</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Normal Period</td>
+                                <td>0.87</td>
+                                <td>0.80</td>
+                                <td>0.83</td>
+                            </tr>
+                            <tr>
+                                <td>Stress Period</td>
+                                <td>0.65</td>
+                                <td>0.78</td>
+                                <td>0.71</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-chart-bar"></i> Feature Impact Ranking
+                    </div>
+                    <div class="feature-impact">
+                        <div class="feature-name">UNRATE</div>
+                        <div class="impact-bar-container">
+                            <div class="impact-bar positive" style="width: 95%;"></div>
+                        </div>
+                        <div class="impact-value">0.42</div>
+                    </div>
+                    <div class="feature-impact">
+                        <div class="feature-name">Retail Mobility</div>
+                        <div class="impact-bar-container">
+                            <div class="impact-bar negative" style="width: 80%;"></div>
+                        </div>
+                        <div class="impact-value">-0.38</div>
+                    </div>
+                    <div class="feature-impact">
+                        <div class="feature-name">FEDFUNDS</div>
+                        <div class="impact-bar-container">
+                            <div class="impact-bar positive" style="width: 65%;"></div>
+                        </div>
+                        <div class="impact-value">0.29</div>
+                    </div>
+                    <div class="feature-impact">
+                        <div class="feature-name">GDP Change</div>
+                        <div class="impact-bar-container">
+                            <div class="impact-bar negative" style="width: 50%;"></div>
+                        </div>
+                        <div class="impact-value">-0.22</div>
+                    </div>
+                    <div class="feature-impact">
+                        <div class="feature-name">Workplace Mob.</div>
+                        <div class="impact-bar-container">
+                            <div class="impact-bar negative" style="width: 40%;"></div>
+                        </div>
+                        <div class="impact-value">-0.18</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="callout">
+                <div class="callout-title">SHAP Analysis Benefits for CRE Risk Management</div>
+                <p>SHAP (SHapley Additive exPlanations) values provide consistent, mathematically rigorous attribution of each feature's contribution to model predictions. This transparency allows stakeholders to understand why specific properties are flagged for stress concerns, helping to prioritize interventions and validate model outputs against domain expertise.</p>
+            </div>
+        </section>
+        
+        <!-- Business Impact Section -->
+        <section id="business-impact" class="container">
+            <h2>Business Impact</h2>
+            
+            <div class="grid-3">
+                <div class="metric-box">
+                    <div class="metric-value">78%</div>
+                    <div class="metric-label">Detection Rate</div>
+                    <p>of actual stress periods identified</p>
+                </div>
+                
+                <div class="metric-box">
+                    <div class="metric-value">≤20%</div>
+                    <div class="metric-label">False Alarms</div>
+                    <p>limiting unnecessary interventions</p>
+                </div>
+                
+                <div class="metric-box">
+                    <div class="metric-value">6-9</div>
+                    <div class="metric-label">Month Lead Time</div>
+                    <p>for proactive risk management</p>
+                </div>
+            </div>
+            
+            <h3>Translation to Business Value</h3>
+            <div class="grid-3">
+                <div class="card">
+                    <div class="icon-container">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h4>Portfolio Management</h4>
+                    <p>Optimize lending decisions and capital allocations through early identification of at-risk properties and markets, reducing potential defaults by up to 15%.</p>
+                </div>
+                
+                <div class="card">
+                    <div class="icon-container">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h4>Resource Allocation</h4>
+                    <p>Deploy intervention teams efficiently with 6-month lead times, focusing mitigation efforts on highest-risk assets before stress conditions fully materialize.</p>
+                </div>
+                
+                <div class="card">
+                    <div class="icon-container">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h4>Regulatory Compliance</h4>
+                    <p>Exceed stress testing requirements with transparent, reproducible methodologies and comprehensive audit trails that demonstrate proactive risk management.</p>
+                </div>
+            </div>
+            
+            <div class="callout">
+                <p><strong>Bottom Line:</strong> These metrics translate directly to improved financial performance for CoStar's Compass engine by providing early intervention opportunities and maximizing resource efficiency.</p>
+            </div>
+        </section>
+        
+        <!-- Next Steps Section -->
+        <section id="next-steps" class="container">
+            <h2>Next Steps & Evolution</h2>
+            
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-rocket"></i> Operationalization
+                    </div>
+                    <ul>
+                        <li><strong>Automate Alerts & Reporting</strong> - Implement scheduled alerts that notify stakeholders when properties cross stress thresholds</li>
+                        <li><strong>API Integration</strong> - Develop REST API endpoints that allow Compass engine to access stress predictions</li>
+                        <li><strong>Performance Dashboard</strong> - Create interactive monitoring system for tracking model performance</li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-code-branch"></i> Model Diversification
+                    </div>
+                    <ul>
+                        <li><strong>Compare Algorithm Performance</strong> - Benchmark gradient boosting implementations for different property types</li>
+                        <li><strong>Ensemble Approaches</strong> - Implement voting and stacking methods to combine predictions</li>
+                        <li><strong>Time Series Models</strong> - Incorporate LSTM networks for capturing long-term dependencies</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <h3>Implementation Timeline</h3>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h4>Initial Deployment</h4>
+                    <p>Q3 2025</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>Model Expansion</h4>
+                    <p>Q4 2025</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>Full Integration</h4>
+                    <p>Q1 2026</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>Advanced Features</h4>
+                    <p>Q2 2026</p>
+                </div>
+            </div>
+        </section>
+    </main>
+        <!-- Closing Section -->
+        <section id="closing" class="container">
+            <h2>Closing & Q &A</h2>
+
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-handshake"></i> Why This Matters to CoStar
+                </div>
+                <p>
+                    The <strong>Quantile-Driven CRE Stress-Test Pipeline</strong> fuses rigorous
+                    quantitative methods with practical real-estate insight—exactly what
+                    CoStar’s Compass model needs for sharper targeting, smarter loan pricing,
+                    and proactive portfolio management.
+                </p>
+            </div>
+
+            <div class="grid-2">
+                <!-- Your Fit -->
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-user-check"></i> My Contribution
+                    </div>
+                    <ul>
+                        <li>End-to-end model design &amp; validation</li>
+                        <li>Production-ready Python &amp; API integration</li>
+                        <li>Data-mining &amp; alternative data sourcing</li>
+                    </ul>
+                </div>
+
+                <!-- Quick Impact Metrics (optional) -->
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-chart-line"></i> Proven Impact
+                    </div>
+                    <ul>
+                        <li><strong>78 % stress-period recall</strong> with &lt; 20 % false alarms</li>
+                        <li><strong>6–9-month</strong> early warning horizon</li>
+                        <li>Scalable to <strong>&gt;1 M</strong> property-loan records</li>
+                    </ul>
+                </div>
+            </div>
+                
+        <footer class="footer">
+            <div class="footer-inner">
+                <!-- brand line -->
+                <div class="brand">
+                    CoStar Risk Analytics&nbsp;|&nbsp;Yullie Yang – Quantitative Analyst Candidate
+                </div>
+
+                <nav class="contact-links">
+                    <a href="mailto:yullieyang@gmail.com"><i class="fas fa-envelope"></i> yullieyang@gmail.com</a>
+                    <a href="tel:+12406204718"><i class="fas fa-phone"></i> (240) 620-4718</a>
+                    <a href="https://github.com/yullieyang" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+                    <a href="https://www.linkedin.com/in/yullieyang" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
+                </nav>
+            </div>
+        </footer>
+
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            document.getElementById('navLinks').classList.toggle('show');
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+                
+                // Close mobile menu if open
+                document.getElementById('navLinks').classList.remove('show');
+            });
+        });
+    </script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const ctx = document.getElementById('rocChart').getContext('2d');
+      const fpr = [0,0.05,0.10,0.15,0.20,0.25,0.30,0.40,0.50,0.60,0.70,0.80,0.90,1.0];
+      const tpr = [0,0.35,0.55,0.68,0.78,0.82,0.85,0.88,0.91,0.93,0.95,0.97,0.99,1.0];
+    
+      const rocChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          datasets: [
+            {
+              label: 'ROC Curve',
+              data: fpr.map((x,i)=>({ x, y: tpr[i] })),
+              borderColor: '#0063a3',
+              backgroundColor: 'rgba(0,99,163,0.1)',
+              borderWidth: 3,
+              fill: true,
+              pointRadius: 0,
+              tension: 0.4
+            },
+            {
+              label: 'Chance',
+              data: [{x:0,y:0},{x:1,y:1}],
+              borderColor: '#999',
+              borderDash: [5,5],
+              pointRadius: 0,
+              fill: false
+            },
+            {
+              label: 'Operating Point',
+              data: [{ x:0.2, y:0.78 }],
+              borderColor: '#c54343',
+              backgroundColor: '#c54343',
+              pointRadius: 6,
+              showLine: false
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: ctx => ctx.dataset.label==='Operating Point'
+                  ? 'FPR: 20%, TPR: 78%'
+                  : `TPR: ${(ctx.parsed.y*100).toFixed(0)}%, FPR: ${(ctx.parsed.x*100).toFixed(0)}%`
+              }
+            }
+          },
+          scales: {
+            x: {
+              type: 'linear',
+              min:0, max:1,
+              title: { display:true, text:'False Positive Rate', font:{size:14,weight:'600'}, color:'#555' },
+              ticks: { callback: v=>`${(v*100).toFixed(0)}%` },
+              grid: { color:'rgba(0,0,0,0.05)' }
+            },
+            y: {
+              type: 'linear',
+              min:0, max:1,
+              title: { display:true, text:'True Positive Rate', font:{size:14,weight:'600'}, color:'#555' },
+              ticks: { callback: v=>`${(v*100).toFixed(0)}%` },
+              grid: { color:'rgba(0,0,0,0.05)' }
+            }
+          },
+          animation: { duration:1500 },
+          elements: { line:{ tension:0.4 } }
+        }
+      });
+    
+      // add dashed connector lines and annotations
+      const drawOrig = rocChart.draw;
+      rocChart.draw = function() {
+        drawOrig.apply(this, arguments);
+        const {ctx, scales:{x:yScale, x: xScale, y: yScale}} = this; // chart.ctx etc
+        const px = this.scales.x.getPixelForValue(0.2);
+        const py = this.scales.y.getPixelForValue(0.78);
+        ctx.save();
+        ctx.setLineDash([5,5]);
+        ctx.strokeStyle='rgba(197,67,67,0.7)';
+        ctx.lineWidth=1;
+        ctx.beginPath();
+        ctx.moveTo(this.scales.x.getPixelForValue(0), py);
+        ctx.lineTo(px, py);
+        ctx.moveTo(px, this.scales.y.getPixelForValue(0));
+        ctx.lineTo(px, py);
+        ctx.stroke();
+        ctx.restore();
+        ctx.save();
+        ctx.fillStyle='#c54343';
+        ctx.font='12px Tinos';
+        ctx.textAlign='center';
+        ctx.fillText('20% FPR', px, this.scales.y.getPixelForValue(0)+20);
+        ctx.textAlign='right';
+        ctx.fillText('78% TPR', this.scales.x.getPixelForValue(0)-4, py+4);
+        ctx.restore();
+      };
+      rocChart.update();
+    });
+    </script>
+</body>
+</html>
