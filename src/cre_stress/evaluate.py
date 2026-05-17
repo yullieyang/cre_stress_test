@@ -11,7 +11,7 @@ import numpy as np
 import pandas as pd
 import shap
 from imblearn.pipeline import Pipeline as ImbPipeline
-from sklearn.metrics import classification_report, roc_auc_score, roc_curve
+from sklearn.metrics import roc_auc_score, roc_curve
 
 from cre_stress.config import Settings, get_settings
 from cre_stress.models import TrainResult

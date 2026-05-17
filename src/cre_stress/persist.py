@@ -8,9 +8,8 @@ layer rather than from CSV, so the schema is the contract.
 from __future__ import annotations
 
 import logging
+from collections.abc import Iterator
 from contextlib import contextmanager
-from datetime import date
-from typing import Iterator
 
 import pandas as pd
 from sqlalchemy import (

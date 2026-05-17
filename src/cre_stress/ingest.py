@@ -7,8 +7,8 @@ idempotent: the same call on the same date produces the same file.
 from __future__ import annotations
 
 import logging
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Iterable
 
 import pandas as pd
 import requests

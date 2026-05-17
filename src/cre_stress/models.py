@@ -93,7 +93,11 @@ def select_threshold(
     threshold satisfies both constraints.
     """
     fpr, tpr, thresholds = roc_curve(y_true, y_score)
-    feasible = [(t, fp, rc) for t, fp, rc in zip(thresholds, fpr, tpr) if fp <= max_fpr and rc >= target_recall]
+    feasible = [
+        (t, fp, rc)
+        for t, fp, rc in zip(thresholds, fpr, tpr, strict=False)
+        if fp <= max_fpr and rc >= target_recall
+    ]
     if feasible:
         return float(feasible[0][0])
     idx = int(np.argmin(np.abs(tpr - target_recall)))
