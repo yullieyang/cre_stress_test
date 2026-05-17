@@ -138,6 +138,17 @@ The Python pipeline does the ingestion, persistence, and classification. The R c
 - [docs/data_dictionary.md](docs/data_dictionary.md) — every column, type, source, transform
 - [docs/model_card.md](docs/model_card.md) — intended use, limitations, ethical considerations
 
+## Portfolio Context
+
+This project translates recurring patterns from stress-testing and
+model-evaluation work — scenario construction, classification under
+class imbalance, explainability, and model documentation — into a
+public, public-data-only portfolio prototype. It uses only public
+data sources (FRED, Google COVID-19 Mobility, Boston Zoning) and does
+not replicate any employer's internal methodology, data, or model
+logic. The goal is to demonstrate reproducible, reviewable analytics
+with interpretable outputs.
+
 ## Limitations
 
 - **Synthetic target.** The "stress" label is constructed from quantile cuts
