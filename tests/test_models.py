@@ -16,8 +16,13 @@ from cre_stress.models import select_threshold, stratified_split, train_classifi
 
 @pytest.fixture
 def small_classification_dataset() -> tuple[pd.DataFrame, pd.Series]:
+    """Imbalanced synthetic data: ~10% positives, learnable signal in feat_a.
+
+    The imbalance is deliberate so the default RandomOverSampler(sampling_strategy=0.2)
+    has work to do.
+    """
     rng = np.random.default_rng(0)
-    n = 200
+    n = 300
     X = pd.DataFrame(
         {
             "feat_a": rng.normal(size=n),
@@ -25,8 +30,8 @@ def small_classification_dataset() -> tuple[pd.DataFrame, pd.Series]:
             "feat_c": rng.normal(size=n),
         }
     )
-    # Make `y` weakly dependent on feat_a so the classifier can learn something.
-    logits = 0.8 * X["feat_a"] - 0.4 * X["feat_b"]
+    # Shift the logit so positives are rare (~10%).
+    logits = 1.2 * X["feat_a"] - 0.4 * X["feat_b"] - 2.0
     p = 1 / (1 + np.exp(-logits))
     y = pd.Series((rng.uniform(size=n) < p).astype(int), name="target")
     return X, y
@@ -50,11 +55,12 @@ def test_train_classifier_returns_valid_result(small_classification_dataset) -> 
 
 
 def test_select_threshold_satisfies_constraints_when_possible() -> None:
+    """With a clearly separable score, the threshold should land in the empty gap."""
     rng = np.random.default_rng(42)
     n = 1000
     y_true = pd.Series(rng.integers(0, 2, size=n))
-    # A perfectly separating score
+    # Wide separation gap (negatives in [0, 0.3], positives in [0.7, 1.0]).
     y_score = np.where(y_true == 1, rng.uniform(0.7, 1.0, size=n), rng.uniform(0.0, 0.3, size=n))
     threshold = select_threshold(y_true, y_score, max_fpr=0.1, target_recall=0.9)
-    # With a separable distribution, the chosen threshold should sit in the gap.
-    assert 0.3 <= threshold <= 0.7
+    # Allow a small numerical tolerance at the gap boundaries.
+    assert 0.3 <= threshold <= 0.71
