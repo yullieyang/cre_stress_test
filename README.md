@@ -6,9 +6,9 @@ The pipeline ingests public data from FRED, Google COVID-19 Mobility, and Boston
 
 > Originally a personal interview take-home; restructured here as a research-codebase reference. Data sources are 100% public.
 
+[![ci](https://github.com/yullieyang/cre_stress_test/actions/workflows/ci.yml/badge.svg)](https://github.com/yullieyang/cre_stress_test/actions/workflows/ci.yml)
 ![python](https://img.shields.io/badge/python-3.10%2B-blue)
 ![R](https://img.shields.io/badge/R-4.3%2B-blue)
-![tests](https://img.shields.io/badge/tests-pytest-green)
 ![license](https://img.shields.io/badge/license-MIT-green)
 
 ## Design goals
