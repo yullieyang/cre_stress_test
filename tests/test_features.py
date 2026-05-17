@@ -7,7 +7,6 @@ import pandas as pd
 import pytest
 
 from cre_stress.features import (
-    StressLabelConfig,
     add_label_noise,
     apply_quantile_stress_labels,
     integrate_macro_mobility,
