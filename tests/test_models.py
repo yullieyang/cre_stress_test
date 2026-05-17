@@ -16,13 +16,14 @@ from cre_stress.models import select_threshold, stratified_split, train_classifi
 
 @pytest.fixture
 def small_classification_dataset() -> tuple[pd.DataFrame, pd.Series]:
-    """Imbalanced synthetic data: ~10% positives, learnable signal in feat_a.
+    """Deterministic imbalanced synthetic data: ~5-7% positives, signal in feat_a.
 
-    The imbalance is deliberate so the default RandomOverSampler(sampling_strategy=0.2)
-    has work to do.
+    The hard-coded positive count keeps the test stable across rng draws and
+    leaves enough headroom for ``RandomOverSampler(sampling_strategy=0.2)`` on
+    a 70/30 split.
     """
     rng = np.random.default_rng(0)
-    n = 300
+    n = 500
     X = pd.DataFrame(
         {
             "feat_a": rng.normal(size=n),
@@ -30,10 +31,11 @@ def small_classification_dataset() -> tuple[pd.DataFrame, pd.Series]:
             "feat_c": rng.normal(size=n),
         }
     )
-    # Shift the logit so positives are rare (~10%).
-    logits = 1.2 * X["feat_a"] - 0.4 * X["feat_b"] - 2.0
-    p = 1 / (1 + np.exp(-logits))
-    y = pd.Series((rng.uniform(size=n) < p).astype(int), name="target")
+    # Force a deterministic ~6% positive rate by ranking on a noisy logit signal.
+    logits = 1.5 * X["feat_a"] - 0.5 * X["feat_b"] + rng.normal(0, 0.5, size=n)
+    n_positive = int(0.06 * n)  # exactly 30 positives
+    threshold = np.partition(logits, -n_positive)[-n_positive]
+    y = pd.Series((logits >= threshold).astype(int), name="target")
     return X, y
 
 
