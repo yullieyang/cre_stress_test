@@ -4,12 +4,13 @@ A production-style **commercial real estate (CRE) credit-risk modeling pipeline*
 
 The pipeline ingests public data from FRED, Google COVID-19 Mobility, and Boston Public Zoning, persists everything to a SQLite database, fits a binary classifier for elevated-stress conditions with explicit threshold control on false-positive rate and recall, and produces ROC / SHAP / commentary artifacts for review.
 
-> **Scope and disclaimer.** This is a personal portfolio project, originally
-> built as an interview take-home and restructured here as a research-codebase
-> reference. **All data sources are 100% public** (FRED, Google COVID-19
-> Mobility, Boston Public Zoning). The repository does **not** reflect any
-> employer's internal data, methodology, model logic, or assumptions. It is
-> not a deployed credit-risk system and should not be used as one.
+> **Scope and disclaimer.** This is a personal portfolio project that
+> demonstrates a reviewable stress-testing workflow, model-evaluation
+> process, and explainable risk analytics using public data. **All data
+> sources are 100% public** (FRED, Google COVID-19 Mobility, Boston Public
+> Zoning). The repository does **not** reflect any employer's internal data,
+> methodology, model logic, or assumptions. It is not a deployed credit-risk
+> system and should not be used as one.
 
 [![ci](https://github.com/yullieyang/cre_stress_test/actions/workflows/ci.yml/badge.svg)](https://github.com/yullieyang/cre_stress_test/actions/workflows/ci.yml)
 ![python](https://img.shields.io/badge/python-3.10%2B-blue)
@@ -24,7 +25,7 @@ The pipeline ingests public data from FRED, Google COVID-19 Mobility, and Boston
 | **Production-style** | Numbered pipeline stages, modular `src/cre_stress/` package, type hints, logging, pytest |
 | **Auditable** | SQLite persistence with explicit schema, model card, methodology doc |
 | **Bilingual (R + Python)** | Python for ML / ingestion; R for ARIMA-based macro stress-scenario forecasting |
-| **AI-assisted, responsibly** | Optional Claude-API commentary module documents results in plain English |
+| **Documented and reviewable** | Methodology doc, model card, explicit limitations; optional commentary module produces a draft summary that a human reviewer must verify |
 | **Reviewable on GitHub** | CI runs pytest on push; figures committed so reviewers can audit without running code |
 
 ## Pipeline
@@ -75,8 +76,8 @@ The pipeline ingests public data from FRED, Google COVID-19 Mobility, and Boston
                                           ▼
                 ┌──────────────────────────────────────────────────────┐
                 │  src/cre_stress/commentary.py  (optional)            │
-                │    Claude API generates a plain-English summary of   │
-                │    classification report and top SHAP drivers        │
+                │    Draft plain-English summary of the classification │
+                │    report and top SHAP drivers, for human review     │
                 └──────────────────────────────────────────────────────┘
 ```
 
@@ -165,14 +166,16 @@ with interpretable outputs.
   modeled.
 - **No live data refresh.** Snapshots in `data/processed/` are committed as
   reference fixtures and must be regenerated via `make run` to refresh.
-- **AI-generated commentary is a draft.** The optional Claude-API commentary
-  module produces a plain-English summary of the latest run; a human
-  reviewer must verify it against the source figures and tables.
+- **Commentary module is a draft.** The optional commentary module produces
+  a plain-English summary of the latest run via an LLM API; outputs are
+  framed as drafts that a human reviewer must verify against the source
+  figures and tables before sharing.
 
 ## Future improvements
 
-- Add a small evaluation harness comparing AI-generated commentary against a
-  hand-graded reference set, so commentary quality is measurable over time.
+- Add a small evaluation harness comparing the draft commentary outputs
+  against a hand-graded reference set, so commentary quality is measurable
+  over time.
 - Replace the quantile-based label with a published distress indicator
   (e.g., aggregated CMBS delinquency rates from public sources).
 - Add a temporal cross-validation strategy (expanding-window) so reported
@@ -197,9 +200,12 @@ with interpretable outputs.
   diagnostics committed to the repo for review.
 - **Model documentation** — methodology, data dictionary, and a model card
   spelling out intended use, limitations, and ethical considerations.
-- **Responsible LLM use** — optional Claude-API commentary is framed as a
+- **Responsible LLM use** — optional commentary module is framed as a
   draft for human review, not a finding; `CLAUDE.md` codifies code-style
-  and review rules for AI-generated diffs.
+  and review rules for AI-assisted diffs. AI coding tools may support
+  scaffolding, documentation review, and consistency checks, but the
+  workflow logic, assumptions, validation criteria, and final outputs
+  remain human-reviewed.
 
 ## Connects to research-support workflows
 
